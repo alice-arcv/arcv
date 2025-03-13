@@ -1,32 +1,15 @@
+// frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import HomePage from './pages/HomePage';
-import ArchivePage from './pages/ArchivePage';
-import FirebaseTest from './components/FirebaseTest';
-import './App.css';
+import FigmaSearchInterface from './components/FigmaSearchInterface';
+import ApiTester from './components/ApiTester'; // Import the tester
+import './styles/arcv-figma.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={
-              <>
-                <HomePage />
-                <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-                  <FirebaseTest />
-                </div>
-              </>
-            } />
-            <Route path="/archive" element={<ArchivePage />} />
-            {/* Add more routes as you create more pages */}
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <div className="App">
+      <FigmaSearchInterface />
+      <ApiTester /> {/* Add this line */}
+    </div>
   );
 }
 

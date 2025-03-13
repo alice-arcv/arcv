@@ -1,35 +1,32 @@
+// frontend/src/components/SneakerCard.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-function SneakerCard({ sneaker }) {
-  // If no sneaker is provided, use default data
-  const sneakerData = sneaker || {
-    id: 'sample-1',
-    name: 'Air Jordan 1',
-    colorway: 'Dark Mocha',
-    brand: 'Nike',
-    image: 'https://via.placeholder.com/150',
-    tags: ['jordans', 'brown', 'retro']
-  };
+const SneakerCard = ({ sneaker }) => {
+  const imageUrl = sneaker.imageUrl || 
+    (sneaker.marketData?.imageLinks && sneaker.marketData.imageLinks.length > 0 
+      ? sneaker.marketData.imageLinks[0] 
+      : 'https://via.placeholder.com/300?text=Sneaker');
 
   return (
     <div className="sneaker-card">
-      <Link to={`/sneaker/${sneakerData.id}`}>
-        <div className="sneaker-image">
-          <img src={sneakerData.image} alt={sneakerData.name} />
-        </div>
-        <div className="sneaker-info">
-          <h3>{sneakerData.brand} {sneakerData.name}</h3>
-          <p>{sneakerData.colorway}</p>
-          <div className="sneaker-tags">
-            {sneakerData.tags.map((tag, index) => (
-              <span key={index} className="tag">#{tag}</span>
-            ))}
-          </div>
-        </div>
-      </Link>
+      <div className="sneaker-image">
+        <img 
+          src={imageUrl}
+          alt={sneaker.name || 'Sneaker'} 
+          className="sneaker-image-uniform"
+          onError={(e) => {
+            console.log('Image failed to load:', e.target.src);
+            e.target.src = 'https://via.placeholder.com/300?text=Sneaker+Image';
+          }}
+        />
+      </div>
+      <div className="sneaker-info">
+        <h3>{sneaker.name || 'Unknown Sneaker'}</h3>
+        <div className="sneaker-brand">{sneaker.brand || 'Unknown Brand'}</div>
+        {/* Add more details here */}
+      </div>
     </div>
   );
-}
+};
 
 export default SneakerCard;
