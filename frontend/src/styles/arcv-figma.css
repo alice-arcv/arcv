@@ -466,3 +466,696 @@ body, #root, .App {
 .figma-product-card:hover {
   transform: translateY(-5px);
 }
+/* Product hover effect and save button */
+.figma-product-image {
+  position: relative;
+}
+
+.figma-product-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.figma-save-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  color: #121212;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.figma-save-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Folder popup styles */
+.figma-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.figma-popup-container {
+  position: absolute;
+  background-color: #121212;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 300px;
+  max-height: 400px;
+  z-index: 101;
+}
+
+.figma-folder-popup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.figma-folder-search {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+}
+
+.figma-folder-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #333;
+  background-color: #1d1d1d;
+  color: #fffceb;
+  font-size: 14px;
+  font-family: 'Space Mono', monospace;
+}
+
+.figma-folder-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.figma-folder-item:hover {
+  background-color: #1d1d1d;
+}
+
+.figma-folder-icon {
+  margin-right: 12px;
+  font-size: 16px;
+}
+
+.figma-folder-name {
+  font-size: 14px;
+  color: #fffceb;
+}
+
+.figma-new-folder {
+  border-bottom: 1px solid #333;
+}
+
+.figma-new-folder .figma-folder-icon {
+  font-weight: bold;
+}
+/* My Archive button */
+.figma-archive-button {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #1d1d1d;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.figma-archive-button:hover {
+  background-color: #2a2a2a;
+}
+
+/* Folders grid layout */
+.figma-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Folder card */
+.figma-folder-card {
+  position: relative;
+  background-color: #121212;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  border: 1px solid #333;
+}
+
+.figma-folder-card:hover {
+  transform: translateY(-5px);
+  background-color: #1d1d1d;
+}
+
+/* Folder preview layout */
+.figma-folder-preview {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 240px;
+}
+
+.figma-folder-main-preview {
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+}
+
+.figma-folder-main-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figma-folder-small-previews {
+  display: flex;
+  width: 100%;
+  height: 70px;
+}
+
+.figma-folder-small-preview {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.figma-folder-small-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Folder tags */
+.figma-folder-tags {
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.figma-folder-tag {
+  color: #fffceb;
+  font-size: 12px;
+}
+
+/* Folder actions */
+.figma-folder-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.figma-folder-card:hover .figma-folder-actions {
+  opacity: 1;
+}
+
+.figma-folder-action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  color: #121212;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.figma-folder-action-btn:hover {
+  transform: scale(1.1);
+}
+
+.figma-action-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+/* Back button styling */
+.figma-back-button {
+  background: none;
+  border: none;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.figma-back-button:hover {
+  text-decoration: underline;
+}
+/* DNA Image Search Page - Exact Figma Reference Match */
+.figma-dna-content {
+  background-color: #121212;
+  background-image: linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(50, 50, 50, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+  padding: 20px;
+  height: calc(100vh - 120px);
+  font-family: 'Space Mono', monospace;
+}
+
+/* Results count label */
+.figma-dna-results-count {
+  color: #fffceb;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+/* Panel layout */
+.figma-dna-panels {
+  display: flex;
+  gap: 20px;
+  height: calc(100% - 30px);
+}
+
+.figma-dna-left-panel,
+.figma-dna-right-panel {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  background-color: rgba(18, 18, 18, 0.8);
+}
+
+.figma-dna-left-panel {
+  flex: 1;
+  position: relative;
+}
+
+.figma-dna-right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Results list styling */
+.figma-dna-results-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.figma-dna-result-item {
+  display: flex;
+  padding: 16px;
+  border-bottom: 1px solid #333;
+  gap: 16px;
+}
+
+.figma-dna-result-image {
+  width: 180px;
+  height: 120px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+.figma-dna-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figma-dna-result-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.figma-dna-result-name {
+  font-size: 16px;
+  color: #fffceb;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.figma-dna-result-subtitle {
+  font-size: 14px;
+  color: #fffceb;
+  margin-bottom: 8px;
+}
+
+.figma-dna-result-match {
+  font-size: 14px;
+  color: #fffceb;
+}
+
+.figma-dna-result-action {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.figma-dna-expand-btn {
+  background: transparent;
+  border: 1px solid #444;
+  color: #fffceb;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.figma-dna-expand-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Loading state */
+.figma-dna-loading-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.figma-dna-loading-bar {
+  width: 200px;
+  height: 20px;
+  border: 1px solid #fffceb;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+}
+
+.figma-dna-loading-progress {
+  width: 60%;
+  height: 100%;
+  background-color: #fffceb;
+  animation: loadingProgress 2s infinite steps(10);
+}
+
+@keyframes loadingProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.figma-dna-loading-text {
+  color: #fffceb;
+  font-size: 14px;
+  letter-spacing: 3px;
+  font-family: monospace;
+}
+
+/* Image display */
+.figma-dna-image-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.figma-dna-image-display img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Thumbnails */
+.figma-dna-thumbnails {
+  display: flex;
+  height: 90px;
+  gap: 10px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.figma-dna-thumbnail {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #333;
+  transition: transform 0.2s ease;
+}
+
+.figma-dna-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.figma-dna-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Upload container */
+.figma-dna-upload-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  gap: 20px;
+}
+
+.figma-dna-upload-sketch {
+  flex: 3;
+  border: 1px dashed #fffceb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.figma-dna-upload-sketch:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.figma-dna-upload-icon {
+  font-size: 24px;
+  color: #fffceb;
+  margin-bottom: 10px;
+}
+
+.figma-dna-upload-text {
+  color: #fffceb;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.figma-dna-camera-option {
+  flex: 1;
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.figma-dna-camera-option:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.figma-dna-camera-icon {
+  font-size: 24px;
+}
+
+/* Empty state */
+.figma-dna-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.figma-dna-empty-message {
+  color: #555;
+  font-size: 14px;
+}
+/* public/css/styles.css */
+:root {
+  --primary-color: #4672b4;
+  --secondary-color: #47956f;
+  --accent-color: #de953e;
+  --error-color: #8b251e;
+  --bg-color: #f5f5f7;
+  --text-color: #333;
+  --card-bg: white;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.search-section {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-container {
+  display: flex;
+  max-width: 600px;
+  margin: 1rem auto;
+}
+
+#search-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+  font-size: 1rem;
+}
+
+#search-button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.sneaker-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.3s ease;
+}
+
+.sneaker-card:hover {
+  transform: translateY(-5px);
+}
+
+.sneaker-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.sneaker-info {
+  padding: 1rem;
+}
+
+.sneaker-name {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.sneaker-colorway,
+.sneaker-retail-price,
+.sneaker-release-date {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.view-details-btn {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.75rem;
+  background-color: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: var(--primary-color);
+}
+
+.loading-indicator {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--error-color);
+  padding: 2rem;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+}

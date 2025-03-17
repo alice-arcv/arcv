@@ -6,26 +6,37 @@ require('dotenv').config(); // Load environment variables from .env file
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Log on startup to verify environment loading
+console.log('Server starting up...');
+console.log('Environment loaded, API keys present:');
+console.log('- SNEAKERS_API_KEY:', !!process.env.SNEAKERS_API_KEY);
+console.log('- ZYLA_API_KEY:', !!process.env.ZYLA_API_KEY);
+
 // Import route files
 const sneakersApiProxy = require('./backend/sneakersApiProxy');
+const zylaApiProxy = require('./backend/zylaApiProxy'); // Add this line
 const searchProxy = require('./backend/searchProxy');
-// Import other route files as needed
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes - Mount your proxies
-app.use('/api/sneakers', sneakersApiProxy);
+app.use('/api/sneakers', sneakersApiProxy); // Keep this for backward compatibility
+app.use('/api/zyla', zylaApiProxy); // Add this line for the new API
 app.use('/api/search', searchProxy);
-// Mount other routes as needed
 
-// Test route to check if API key is set
+// Test route to check if API keys are set
 app.get('/api/test-env', (req, res) => {
-  const hasApiKey = !!process.env.SNEAKERS_API_KEY;
   res.json({ 
-    hasApiKey: hasApiKey,
-    apiKeyLength: hasApiKey ? process.env.SNEAKERS_API_KEY.length : 0,
+    sneakersApiKey: {
+      present: !!process.env.SNEAKERS_API_KEY,
+      length: process.env.SNEAKERS_API_KEY ? process.env.SNEAKERS_API_KEY.length : 0
+    },
+    zylaApiKey: {
+      present: !!process.env.ZYLA_API_KEY,
+      length: process.env.ZYLA_API_KEY ? process.env.ZYLA_API_KEY.length : 0
+    },
     nodeEnv: process.env.NODE_ENV
   });
 });
@@ -41,8 +52,4 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`SneakersAPI key is ${process.env.SNEAKERS_API_KEY ? 'set' : 'NOT SET'}`);
 });
-// At the top of your server.js file
-require('dotenv').config();
-console.log('Environment loaded, API key present:', !!process.env.SNEAKERS_API_KEY);

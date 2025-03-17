@@ -7,8 +7,10 @@ import '../styles/arcv-figma.css';
 import logoImage from '../images/arcv-logo.png';
 // Import the ProductDetail component
 import ProductDetail from './ProductDetail';
+// Import the SaveToFolderPopup component
+import SaveToFolderPopup from './SaveToFolderPopup';
 
-const FigmaSearchInterface = () => {
+const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onSaveProduct, onGoToFolders, onGoToImageSearch }) => {
   // State for search and results
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
@@ -27,6 +29,10 @@ const FigmaSearchInterface = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showProductDetail, setShowProductDetail] = useState(false);
 
+  // State for hover and save functionality
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [selectedForSave, setSelectedForSave] = useState(null);
+  
   // Handle search when Enter key is pressed
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -37,6 +43,19 @@ const FigmaSearchInterface = () => {
   // Handle search button click with enhanced debugging
   const handleSearch = async () => {
     if (!searchTerm.trim()) return;
+    
+    // Handle special commands
+    const trimmedTerm = searchTerm.trim().toLowerCase();
+    
+    if (trimmedTerm === '/myarchive') {
+      onGoToFolders();
+      return;
+    }
+    
+    if (trimmedTerm === '/dna') {
+      onGoToImageSearch();
+      return;
+    }
     
     setLoading(true);
     console.log('=== SEARCH STARTED ===');
@@ -111,6 +130,20 @@ const FigmaSearchInterface = () => {
     console.log('Selected product:', product);
     setSelectedProduct(product);
     setShowProductDetail(true);
+  };
+
+  // Handle product hover
+  const handleProductHover = (productId) => {
+    setHoveredProduct(productId);
+  };
+
+  // Handle save to folder
+  const handleSaveToFolder = (productId, folderId) => {
+    // Save product to the selected folder
+    onSaveProduct(productId, folderId);
+    
+    // For demo purposes - you can replace with a toast notification in a real app
+    console.log(`Product ${productId} saved to folder ${folderId}`);
   };
 
   // Handle filter changes
@@ -290,6 +323,8 @@ const FigmaSearchInterface = () => {
                         key={sneaker.id} 
                         className="figma-product-card"
                         onClick={() => handleProductSelect(sneaker)}
+                        onMouseEnter={() => handleProductHover(sneaker.id)}
+                        onMouseLeave={() => setHoveredProduct(null)}
                       >
                         <div className="figma-product-image">
                           <img 
@@ -299,6 +334,29 @@ const FigmaSearchInterface = () => {
                               e.target.src = 'https://via.placeholder.com/300x300/eeeeee/333333?text=Product';
                             }}
                           />
+                          
+                          {/* Show action buttons on hover */}
+                          {hoveredProduct === sneaker.id && (
+                            <div className="figma-product-actions">
+                              <button 
+                                className="figma-save-btn"
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the card click
+                                  setSelectedForSave(sneaker.id);
+                                }}
+                              >
+                                +
+                              </button>
+                            </div>
+                          )}
+                          
+                          {/* Saved indicator */}
+                          {Object.entries(savedProducts).some(([folderId, products]) => 
+                            products.includes(sneaker.id)
+                          ) && (
+                            <div className="figma-product-saved-indicator"></div>
+                          )}
+                          
                           {/* Tiny indicator of source that doesn't change the UI look */}
                           {sneaker.source && (
                             <div style={{
@@ -329,6 +387,26 @@ const FigmaSearchInterface = () => {
               </div>
             </div>
           </div>
+          
+          {/* Folder selection popup */}
+          {selectedForSave && (
+            <div 
+              className="figma-popup-overlay"
+              onClick={() => setSelectedForSave(null)}
+            >
+              <div 
+                className="figma-popup-container"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <SaveToFolderPopup 
+                  folders={savedFolders}
+                  onClose={() => setSelectedForSave(null)}
+                  onSave={(folderId) => handleSaveToFolder(selectedForSave, folderId)}
+                  onCreateFolder={onCreateFolder}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

@@ -721,3 +721,517 @@ body {
   z-index: 1;
   padding: 15px;
 }
+/* DNA Image Search Page Styles */
+.figma-dna-layout {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  height: calc(100vh - 160px);
+  margin-bottom: 16px;
+}
+
+.figma-dna-results {
+  width: 45%;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.figma-dna-upload-area {
+  width: 55%;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Upload box */
+.figma-dna-upload-box {
+  border: 2px dashed #555;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+  margin: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.figma-dna-upload-box:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.figma-dna-upload-icon {
+  font-size: 48px;
+  color: #555;
+}
+
+/* Uploaded image display */
+.figma-dna-uploaded-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.figma-dna-uploaded-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Camera option */
+.figma-dna-camera-option {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.figma-dna-camera-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #333;
+  border: 1px solid #555;
+  color: #fffceb;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.figma-dna-camera-btn:hover {
+  background-color: #444;
+}
+
+/* Loading state */
+.figma-dna-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.figma-dna-loading-bar {
+  width: 200px;
+  height: 20px;
+  border: 1px solid #555;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.figma-dna-progress-bar {
+  width: 50%;
+  height: 100%;
+  background-color: #fffceb;
+  animation: progress 2s infinite;
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+.figma-dna-loading-text {
+  font-family: monospace;
+  letter-spacing: 3px;
+  color: #fffceb;
+}
+
+/* Similar products list */
+.figma-dna-similar-products {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.figma-dna-product {
+  display: flex;
+  padding: 16px;
+  border-bottom: 1px solid #333;
+  min-height: 120px;
+}
+
+.figma-dna-product-image {
+  width: 180px;
+  height: 120px;
+  margin-right: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.figma-dna-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figma-dna-product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.figma-dna-product-name {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.figma-dna-product-subtitle {
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 8px;
+}
+
+.figma-dna-product-match {
+  font-size: 14px;
+  color: #fffceb;
+}
+
+.figma-dna-product-link {
+  display: flex;
+  align-items: center;
+}
+
+.figma-dna-expand-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid #555;
+  color: #fffceb;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-dna-expand-btn:hover {
+  background-color: #333;
+}
+
+/* Empty state */
+.figma-dna-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #555;
+  font-size: 16px;
+  text-align: center;
+  padding: 0 30px;
+}
+
+/* Search history */
+.figma-dna-history {
+  border-top: 1px solid #333;
+  padding: 16px 0;
+}
+
+.figma-dna-history-items {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 0 16px;
+}
+
+.figma-dna-history-item {
+  flex-shrink: 0;
+  width: 120px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.figma-dna-history-item:hover {
+  transform: translateY(-4px);
+}
+
+.figma-dna-history-image {
+  width: 100%;
+  height: 100%;
+}
+
+.figma-dna-history-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* DNA Image Search Page - Updated to match Figma reference */
+.figma-dna-container {
+  background-color: #121212;
+  background-image: linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(50, 50, 50, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+}
+
+.figma-dna-main-content {
+  display: flex;
+  gap: 20px;
+  height: calc(100vh - 180px);
+  padding: 20px 0;
+}
+
+/* Left panel - match results */
+.figma-dna-matches-panel {
+  flex: 0 0 45%;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: rgba(18, 18, 18, 0.7);
+  position: relative;
+}
+
+/* Styled similar to the Figma reference */
+.figma-dna-similar-products {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.figma-dna-match-item {
+  display: flex;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+  gap: 20px;
+  align-items: center;
+}
+
+.figma-dna-match-image {
+  flex: 0 0 180px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.figma-dna-match-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figma-dna-match-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.figma-dna-match-name {
+  font-size: 16px;
+  color: #fffceb;
+}
+
+.figma-dna-match-subtitle {
+  font-size: 14px;
+  color: #fffceb;
+}
+
+.figma-dna-match-percentage {
+  font-size: 14px;
+  color: #fffceb;
+  margin-top: 4px;
+}
+
+.figma-dna-match-action {
+  flex: 0 0 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.figma-dna-expand-btn {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fffceb;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-dna-expand-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Loading indicator styled like the Figma example */
+.figma-dna-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.figma-dna-loading-bar {
+  width: 220px;
+  height: 20px;
+  border: 1px solid #555;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.figma-dna-loading-progress {
+  height: 100%;
+  background-color: #fffceb;
+  width: 50%;
+  animation: dnaProgress 2s infinite linear;
+}
+
+@keyframes dnaProgress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+.figma-dna-loading-text {
+  font-family: 'Space Mono', monospace;
+  color: #fffceb;
+  font-size: 14px;
+  letter-spacing: 3px;
+}
+
+.figma-dna-no-matches {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #fffceb;
+  opacity: 0.6;
+}
+
+/* Right panel - image display/upload */
+.figma-dna-image-panel {
+  flex: 0 0 55%;
+  border: 1px solid #333;
+  border-radius: 12px;
+  background-color: rgba(18, 18, 18, 0.7);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-dna-display-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.figma-dna-display-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.figma-dna-upload-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px dashed #555;
+  margin: 20px;
+  border-radius: 8px;
+}
+
+.figma-dna-upload-icon {
+  font-size: 36px;
+  color: #fffceb;
+  opacity: 0.5;
+}
+
+.figma-dna-camera-option {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.figma-dna-camera-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: transparent;
+  border: 1px solid #444;
+  color: #fffceb;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-dna-camera-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* History bar at bottom */
+.figma-dna-history {
+  padding: 15px 0;
+}
+
+.figma-dna-history-items {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.figma-dna-history-item {
+  flex: 0 0 120px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border: 1px solid #333;
+}
+
+.figma-dna-history-item:hover {
+  transform: translateY(-3px);
+}
+
+.figma-dna-history-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Prompt message when nothing is uploaded */
+.figma-dna-prompt {
+  font-size: 14px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.7;
+}

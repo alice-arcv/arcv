@@ -7,8 +7,7 @@ export async function searchSneakersFromAPI(query, limit = 20) {
     console.log('Searching SneakersAPI.dev for:', query);
     
     // We'll use our backend as a proxy to protect our API key
-    const response = await fetch(`/api/sneakers/search?query=${encodeURIComponent(query)}&limit=${limit}`);
-    
+    const response = await fetch(`/api/sneakers/search?query=${encodeURIComponent(query)}&limit=${limit}&includeMarketData=true&sort=relevance`);    
     if (!response.ok) {
       throw new Error(`SneakersAPI error: ${response.status}`);
     }
