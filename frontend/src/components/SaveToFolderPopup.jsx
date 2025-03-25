@@ -1,5 +1,7 @@
 // frontend/src/components/SaveToFolderPopup.jsx
 import React, { useState } from 'react';
+// Import the folder icon from the src/images directory
+import folderPlusIcon from '../images/folder-plus-icon.png';
 
 const SaveToFolderPopup = ({ folders, onClose, onSave, onCreateFolder }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -43,21 +45,35 @@ const SaveToFolderPopup = ({ folders, onClose, onSave, onCreateFolder }) => {
         className="figma-folder-item figma-new-folder"
         onClick={handleCreateFolder}
       >
-        <span className="figma-folder-icon">+</span>
+        {/* Using the imported folder icon */}
+        <img 
+          src={folderPlusIcon} 
+          alt="New Folder" 
+          className="figma-folder-icon"
+          style={{ width: '20px', height: '20px' }}
+        />
         <span className="figma-folder-name">New Folder</span>
       </div>
       
-      {/* Folder list */}
-      {filteredFolders.map(folder => (
-        <div 
-          key={folder.id} 
-          className="figma-folder-item"
-          onClick={() => handleSelectFolder(folder.id)}
-        >
-          <span className="figma-folder-icon">📁</span>
-          <span className="figma-folder-name">{folder.name}</span>
-        </div>
-      ))}
+      {/* Folder list - with scrolling */}
+      <div className="folder-list">
+        {filteredFolders.map(folder => (
+          <div 
+            key={folder.id} 
+            className="figma-folder-item"
+            onClick={() => handleSelectFolder(folder.id)}
+          >
+            {/* Using the imported folder icon */}
+            <img 
+              src={folderPlusIcon} 
+              alt="Folder" 
+              className="figma-folder-icon"
+              style={{ width: '20px', height: '20px' }}
+            />
+            <span className="figma-folder-name">{folder.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

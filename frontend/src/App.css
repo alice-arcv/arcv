@@ -1235,3 +1235,388 @@ body {
   text-align: center;
   opacity: 0.7;
 }
+/* Update these styles in frontend/src/styles/arcv-figma.css */
+
+/* Make the sidebar auto-height instead of extending to the bottom */
+.figma-sidebar {
+  width: 285px;
+  flex-shrink: 0;
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px 15px; /* Reduced padding */
+  background-color: #121212;
+  height: auto; /* Make it auto-height */
+  align-self: flex-start; /* Prevent stretching to bottom */
+}
+
+/* Make the filter section labels smaller and reduce spacing */
+.figma-filter-section {
+  margin-bottom: 25px; /* Reduced from 60px */
+}
+
+/* Make filter labels 30% smaller */
+.figma-filter-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fffceb;
+  font-size: 12.6px; /* Reduced by 30% from 18px */
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 5px; /* Add a little space after the label */
+}
+
+/* Make the circle smaller to match */
+.filter-arrow-circle {
+  width: 22px; /* Reduced from 30px */
+  height: 22px; /* Reduced from 30px */
+  border-radius: 50%;
+  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px; /* Smaller arrow text */
+}
+
+/* Make filter content 30% smaller */
+.figma-filter-content {
+  margin-top: 10px; /* Reduced from 15px */
+  padding-left: 8px; /* Reduced from 10px */
+}
+
+/* Make the checkbox text 30% smaller */
+.figma-checkbox-label {
+  font-size: 11.2px; /* Reduced by 30% from 16px */
+  color: #fffceb;
+}
+
+/* Reduce spacing between checkboxes */
+.figma-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Reduced from 15px */
+}
+
+/* Make checkboxes a bit smaller */
+.figma-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px; /* Reduced from 12px */
+}
+
+/* Make the price inputs smaller too */
+.figma-price-input {
+  flex: 1;
+  padding: 6px 8px; /* Reduced padding */
+  background-color: transparent;
+  border: 1px solid #777;
+  border-radius: 4px;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 11.2px; /* Reduced by 30% */
+}
+/* Make filter sections much closer together */
+.figma-filter-section {
+  margin-bottom: 15px; /* Reduced from 60px */
+}
+
+/* Make filter labels 50% smaller */
+.figma-filter-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fffceb;
+  font-size: 9px; /* Reduced by 50% from 18px */
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 3px;
+}
+
+/* Make the circle arrow indicator smaller */
+.filter-arrow-circle {
+  width: 15px; /* Reduced from 30px */
+  height: 15px; /* Reduced from 30px */
+  border-radius: 50%;
+  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px; /* Smaller arrow text */
+}
+
+/* Make filter content more compact */
+.figma-filter-content {
+  margin-top: 5px; /* Reduced from 15px */
+  padding-left: 5px; /* Reduced from 10px */
+}
+
+/* Make checkbox text 50% smaller */
+.figma-checkbox-label {
+  font-size: 8px; /* Reduced by 50% from 16px */
+  color: #fffceb;
+}
+
+/* Reduce spacing between checkboxes */
+.figma-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Reduced from 15px */
+}
+
+/* Make checkboxes half size */
+.figma-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 10px; /* Reduced from 20px */
+  height: 10px; /* Reduced from 20px */
+  background-color: transparent;
+  border: 1px solid #777;
+  border-radius: 2px; /* Smaller radius */
+  margin-right: 6px; /* Reduced from 12px */
+  cursor: pointer;
+  position: relative;
+}
+
+/* Adjust the checkmark size inside the checkbox */
+.figma-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #121212;
+  font-size: 7px; /* Smaller checkmark */
+}
+
+/* Make price inputs smaller */
+.figma-price-range {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Reduced from 10px */
+  margin-top: 5px; /* Reduced from 10px */
+}
+
+.figma-price-input {
+  flex: 1;
+  padding: 4px 6px; /* Reduced padding */
+  background-color: transparent;
+  border: 1px solid #777;
+  border-radius: 2px; /* Smaller radius */
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; /* Reduced by 50% */
+}
+/* Add these updated styles to frontend/src/styles/arcv-figma.css */
+
+/* Make the sidebar even smaller with tighter padding */
+.figma-sidebar {
+  width: 220px; /* Reduced overall width */
+  padding: 12px 10px; /* Smaller padding */
+  border-radius: 6px;
+}
+
+/* Make filter sections much tighter together */
+.figma-filter-section {
+  margin-bottom: 8px; /* Drastically reduced from 15px */
+}
+
+/* Make filter labels much smaller (about half current size) */
+.figma-filter-label {
+  font-size: 7px; /* Further reduced from 9px */
+  margin-bottom: 2px;
+  letter-spacing: 0.5px; /* Add slight letter spacing for readability */
+}
+
+/* Make the circle arrow indicator tiny */
+.filter-arrow-circle {
+  width: 12px; /* Further reduced from 15px */
+  height: 12px; /* Further reduced from 15px */
+  border: 0.5px solid #fff; /* Thinner border */
+  font-size: 6px; /* Smaller arrow text */
+}
+
+/* Reduce content padding further */
+.figma-filter-content {
+  margin-top: 3px; /* Reduced from 5px */
+  padding-left: 4px; /* Reduced from 5px */
+}
+
+/* Make checkbox text much smaller */
+.figma-checkbox-label {
+  font-size: 6px; /* Further reduced from 8px */
+  letter-spacing: 0.5px; /* Add slight letter spacing for readability */
+}
+
+/* Make checkboxes tiny */
+.figma-checkbox {
+  width: 8px; /* Reduced from 10px */
+  height: 8px; /* Reduced from 10px */
+  margin-right: 4px; /* Reduced from 6px */
+  border-radius: 1px; /* Smaller radius */
+  border: 0.5px solid #777; /* Thinner border */
+}
+
+/* Adjust the checkmark size 
+/* Updated filter styles to match product description text */
+
+/* Make sidebar narrower */
+.figma-sidebar {
+  width: 190px;
+  padding: 10px 8px;
+  border-radius: 6px;
+  height: auto;
+  align-self: flex-start;
+}
+
+/* Style filter labels to match the product description text */
+.figma-filter-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px !important; /* Match the product subtitle size */
+  font-weight: normal;
+  color: #fffceb;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Make the arrow circles much smaller and more subtle */
+.filter-arrow-circle {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 0.5px solid #777; /* Lighter border like the product text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-arrow-circle span {
+  font-size: 5px; /* Tiny arrow */
+  color: #999;
+}
+
+/* Make filter sections more compact */
+.figma-filter-section {
+  margin-bottom: 6px;
+}
+
+/* Make checkbox text match product description */
+.figma-checkbox-label {
+  font-size: 10px;
+  color: #fffceb;
+  opacity: 0.8;
+}
+
+/* Make checkboxes smaller */
+.figma-checkbox {
+  width: 7px;
+  height: 7px;
+  margin-right: 4px;
+  border-radius: 1px;
+  border: 0.5px solid #777;
+}
+
+/* Even smaller checkmark */
+.figma-checkbox:checked::after {
+  font-size: 5px;
+}
+
+/* Style price inputs to match */
+.figma-price-input {
+  padding: 2px 4px;
+  font-size: 10px;
+  border: 0.5px solid #777;
+  border-radius: 2px;
+}
+
+/* Ensure filter content is properly spaced */
+.figma-filter-content {
+  margin-top: 2px;
+  padding-left: 3px;
+}
+
+/* Tighter checkbox spacing */
+.figma-checkbox-group {
+  gap: 2px;
+}
+/* FILTER SIZE FIX - ADD AT END OF FILE */
+/* These styles match the product subtitle text size */
+
+/* Make sidebar narrower and auto-height */
+.figma-sidebar {
+  width: 190px !important;
+  padding: 10px 8px !important;
+  border-radius: 6px !important;
+  height: auto !important;
+  align-self: flex-start !important;
+}
+
+/* Filter labels sized to match product description */
+.figma-filter-label {
+  font-size: 12px !important; 
+  font-weight: normal !important;
+  color: #fffceb !important;
+  letter-spacing: 0.3px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Smaller arrow circles */
+.filter-arrow-circle {
+  width: 11px !important;
+  height: 11px !important;
+  border: 0.5px solid #777 !important;
+}
+
+.filter-arrow-circle span {
+  font-size: 5px !important;
+  color: #999 !important;
+}
+
+/* More compact filter sections */
+.figma-filter-section {
+  margin-bottom: 6px !important;
+}
+
+/* Checkbox text matches product description */
+.figma-checkbox-label {
+  font-size: 11px !important;
+  color: #fffceb !important;
+  opacity: 0.8 !important;
+}
+
+/* Smaller checkboxes */
+.figma-checkbox {
+  width: 7px !important;
+  height: 7px !important;
+  margin-right: 4px !important;
+  border-radius: 1px !important;
+  border: 0.5px solid #777 !important;
+}
+
+.figma-checkbox:checked::after {
+  font-size: 5px !important;
+}
+
+/* Smaller price inputs */
+.figma-price-input {
+  padding: 2px 4px !important;
+  font-size: 11px !important;
+  border: 0.5px solid #777 !important;
+  border-radius: 2px !important;
+}
+
+/* Tighter spacing */
+.figma-filter-content {
+  margin-top: 2px !important;
+  padding-left: 3px !important;
+}
+
+.figma-checkbox-group {
+  gap: 2px !important;
+}

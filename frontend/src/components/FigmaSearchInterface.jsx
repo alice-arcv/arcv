@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react';
 // Import the search integration service
 import { searchSneakers, formatSneakerData } from '../services/searchIntegration';
 import '../styles/arcv-figma.css';
+import '../styles/filter-fix.css'; // Import the new filter styles if you have this file
 // Import the logo with the correct filename
 import logoImage from '../images/arcv-logo.png';
+// Import the chevron icon
+import chevronIcon from '../images/chevron-icon.png';
 // Import the ProductDetail component
 import ProductDetail from './ProductDetail';
 // Import the SaveToFolderPopup component
@@ -16,11 +19,13 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchSource, setSearchSource] = useState('');
+  const [isFilterVisible, setIsFilterVisible] = useState(true);
+  const [expandedFilter, setExpandedFilter] = useState('material'); // Default to material being expanded
   const [filters, setFilters] = useState({
-    gender: '',
-    age: '',
-    color: '',
-    brand: '',
+    gender: [],
+    age: [],
+    color: [],
+    brand: [],
     material: [],
     price: { min: null, max: null }
   });
@@ -32,6 +37,58 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
   // State for hover and save functionality
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [selectedForSave, setSelectedForSave] = useState(null);
+  
+  // Sorting state
+  const [sortOption, setSortOption] = useState('newest');
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  
+  // Toggle filter sidebar visibility with layout recalculation
+  const toggleFilterSidebar = () => {
+    setIsFilterVisible(!isFilterVisible);
+    
+    // Force layout recalculation after state update
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 300); // Wait for transition to complete (300ms)
+  };
+
+  // Toggle filter expansion
+  const toggleFilterExpansion = (filterName) => {
+    if (expandedFilter === filterName) {
+      setExpandedFilter(null); // Collapse if already expanded
+    } else {
+      setExpandedFilter(filterName); // Expand the clicked filter
+    }
+  };
+  
+  // Handle sort selection
+  const handleSortChange = (option) => {
+    setSortOption(option);
+    setSortMenuOpen(false);
+    
+    // Apply sorting to results
+    let sortedResults = [...results];
+    
+    switch(option) {
+      case 'newest':
+        sortedResults.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
+        break;
+      case 'oldest':
+        sortedResults.sort((a, b) => (a.releaseDate || '').localeCompare(b.releaseDate || ''));
+        break;
+      case 'price-asc':
+        sortedResults.sort((a, b) => (parseFloat(a.retailPrice) || 0) - (parseFloat(b.retailPrice) || 0));
+        break;
+      case 'price-desc':
+        sortedResults.sort((a, b) => (parseFloat(b.retailPrice) || 0) - (parseFloat(a.retailPrice) || 0));
+        break;
+      default:
+        // Default sorting (newest)
+        sortedResults.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
+    }
+    
+    setResults(sortedResults);
+  };
   
   // Handle search when Enter key is pressed
   const handleKeyDown = (e) => {
@@ -75,6 +132,9 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
       setResults(searchResults.results || []);
       setSearchSource(searchResults.source || 'unknown');
       
+      // Apply current sort option to new results
+      handleSortChange(sortOption);
+      
       // Log the first few results for debugging
       if (searchResults.results && searchResults.results.length > 0) {
         console.log('Sample of first result:', {
@@ -94,35 +154,42 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
     }
   };
 
-  // Handle filter changes
+  // Handle multiple selection filter changes
   const handleFilterChange = (filterType, value) => {
-    console.log(`Changing ${filterType} filter to:`, value);
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
-  };
-
-  // Toggle material filters
-  const handleMaterialChange = (material, isChecked) => {
-    console.log(`Toggling material '${material}':`, isChecked);
+    console.log(`Toggling ${filterType} filter with value:`, value);
     setFilters(prev => {
-      const currentMaterials = [...prev.material];
+      const currentValues = [...prev[filterType]];
       
-      if (isChecked) {
-        currentMaterials.push(material);
+      // If value is already selected, remove it; otherwise, add it
+      const valueIndex = currentValues.indexOf(value);
+      if (valueIndex > -1) {
+        currentValues.splice(valueIndex, 1);
       } else {
-        const index = currentMaterials.indexOf(material);
-        if (index > -1) {
-          currentMaterials.splice(index, 1);
-        }
+        currentValues.push(value);
       }
       
       return {
         ...prev,
-        material: currentMaterials
+        [filterType]: currentValues
       };
     });
+  };
+
+  // Handle material filter changes (same as other filters now for consistency)
+  const handleMaterialChange = (material) => {
+    handleFilterChange('material', material);
+  };
+  
+  // Handle price range changes
+  const handlePriceChange = (type, value) => {
+    const parsedValue = value ? parseInt(value) : null;
+    setFilters(prev => ({
+      ...prev,
+      price: {
+        ...prev.price,
+        [type]: parsedValue
+      }
+    }));
   };
 
   // Handle product selection for detail view
@@ -226,7 +293,7 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
               <img src={logoImage} alt="ARCV Logo" className="figma-logo-image" />
             </div>
             
-            {/* Search input centered */}
+            {/* Search input centered with filter toggle and sort button inside */}
             <div className="figma-search">
               <input
                 type="text"
@@ -236,12 +303,54 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
+              
+              {/* Sort and filter icons inside the search input */}
+              <div className="search-icons">
+                {/* Filter toggle button */}
+                <div 
+                  className={`filter-icon filter-toggle ${isFilterVisible ? 'active-filter' : ''}`}
+                  onClick={toggleFilterSidebar}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3M1 14H7M9 8H15M17 16H23" 
+                          stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+
+                {/* Sort dropdown button - Updated to match Figma reference with up/down arrows */}
+                <div className="sort-icon" onClick={() => setSortMenuOpen(!sortMenuOpen)}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 14l5 5 5-5M7 10l5-5 5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  
+                  {/* Sort dropdown menu */}
+                  {sortMenuOpen && (
+                    <div className="sort-dropdown">
+                      <div className={`sort-option ${sortOption === 'newest' ? 'active' : ''}`} 
+                           onClick={() => handleSortChange('newest')}>
+                        Newest First
+                      </div>
+                      <div className={`sort-option ${sortOption === 'oldest' ? 'active' : ''}`} 
+                           onClick={() => handleSortChange('oldest')}>
+                        Oldest First
+                      </div>
+                      <div className={`sort-option ${sortOption === 'price-asc' ? 'active' : ''}`} 
+                           onClick={() => handleSortChange('price-asc')}>
+                        Price: Low to High
+                      </div>
+                      <div className={`sort-option ${sortOption === 'price-desc' ? 'active' : ''}`} 
+                           onClick={() => handleSortChange('price-desc')}>
+                        Price: High to Low
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             
             {/* Control buttons on the right */}
             <div className="figma-controls">
               <button className="figma-control-btn">^</button>
-              <button className="figma-control-btn">=</button>
               <div className="figma-user-icon"></div>
             </div>
           </div>
@@ -250,74 +359,417 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
           <div className="figma-content">
             {/* Main layout with filters and results */}
             <div className="figma-main">
-              {/* Left sidebar with filters - action buttons removed */}
-              <div className="figma-sidebar figma-sidebar-box">
-                {/* Filter sections - starting directly with the filters */}
+              {/* Left sidebar with filters - with toggle visibility */}
+              <div className={`figma-sidebar ${isFilterVisible ? 'visible' : 'hidden'}`}>
+                {/* Gender filter - just label with expandable section */}
                 <div className="figma-filter-section">
-                  <label className="figma-filter-label">gender</label>
-                </div>
-                
-                <div className="figma-filter-section">
-                  <label className="figma-filter-label">age</label>
-                </div>
-                
-                <div className="figma-filter-section">
-                  <label className="figma-filter-label">color</label>
-                </div>
-                
-                <div className="figma-filter-section">
-                  <label className="figma-filter-label">brand</label>
-                </div>
-                
-                {/* Material filter with checkboxes */}
-                <div className="figma-filter-section">
-                  <label className="figma-filter-label">material</label>
-                  <div className="figma-checkbox-group">
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="leather" className="figma-checkbox" />
-                      <label htmlFor="leather" className="figma-checkbox-label">Leather</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="bio-leather" className="figma-checkbox" />
-                      <label htmlFor="bio-leather" className="figma-checkbox-label">Bio Leather</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="textile" className="figma-checkbox" />
-                      <label htmlFor="textile" className="figma-checkbox-label">Textile</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="rubber" className="figma-checkbox" />
-                      <label htmlFor="rubber" className="figma-checkbox-label">Rubber</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="nonwoven" className="figma-checkbox" />
-                      <label htmlFor="nonwoven" className="figma-checkbox-label">Nonwoven</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="synthetic" className="figma-checkbox" />
-                      <label htmlFor="synthetic" className="figma-checkbox-label">Synthetic</label>
-                    </div>
-                    <div className="figma-checkbox-item">
-                      <input type="checkbox" id="recycled" className="figma-checkbox" />
-                      <label htmlFor="recycled" className="figma-checkbox-label">Recycled Content</label>
-                    </div>
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('gender')}
+                    data-expanded={expandedFilter === 'gender'}
+                  >
+                    gender
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'gender' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
                   </div>
+                  {expandedFilter === 'gender' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-checkbox-group">
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="men" 
+                            className="figma-checkbox"
+                            checked={filters.gender.includes('men')}
+                            onChange={() => handleFilterChange('gender', 'men')}
+                          />
+                          <label htmlFor="men" className="figma-checkbox-label">Men</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="women" 
+                            className="figma-checkbox"
+                            checked={filters.gender.includes('women')}
+                            onChange={() => handleFilterChange('gender', 'women')}
+                          />
+                          <label htmlFor="women" className="figma-checkbox-label">Women</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="unisex" 
+                            className="figma-checkbox"
+                            checked={filters.gender.includes('unisex')}
+                            onChange={() => handleFilterChange('gender', 'unisex')}
+                          />
+                          <label htmlFor="unisex" className="figma-checkbox-label">Unisex</label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
+                {/* Age filter - just label with expandable section */}
                 <div className="figma-filter-section">
-                  <label className="figma-filter-label">price</label>
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('age')}
+                    data-expanded={expandedFilter === 'age'}
+                  >
+                    age
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'age' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
+                  </div>
+                  {expandedFilter === 'age' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-checkbox-group">
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="adult" 
+                            className="figma-checkbox"
+                            checked={filters.age.includes('adult')}
+                            onChange={() => handleFilterChange('age', 'adult')}
+                          />
+                          <label htmlFor="adult" className="figma-checkbox-label">Adult</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="youth" 
+                            className="figma-checkbox"
+                            checked={filters.age.includes('youth')}
+                            onChange={() => handleFilterChange('age', 'youth')}
+                          />
+                          <label htmlFor="youth" className="figma-checkbox-label">Youth</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="toddler" 
+                            className="figma-checkbox"
+                            checked={filters.age.includes('toddler')}
+                            onChange={() => handleFilterChange('age', 'toddler')}
+                          />
+                          <label htmlFor="toddler" className="figma-checkbox-label">Toddler</label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Color filter - just label with expandable section */}
+                <div className="figma-filter-section">
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('color')}
+                    data-expanded={expandedFilter === 'color'}
+                  >
+                    color
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'color' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
+                  </div>
+                  {expandedFilter === 'color' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-checkbox-group">
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="black" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('black')}
+                            onChange={() => handleFilterChange('color', 'black')}
+                          />
+                          <label htmlFor="black" className="figma-checkbox-label">Black</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="white" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('white')}
+                            onChange={() => handleFilterChange('color', 'white')}
+                          />
+                          <label htmlFor="white" className="figma-checkbox-label">White</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="red" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('red')}
+                            onChange={() => handleFilterChange('color', 'red')}
+                          />
+                          <label htmlFor="red" className="figma-checkbox-label">Red</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="blue" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('blue')}
+                            onChange={() => handleFilterChange('color', 'blue')}
+                          />
+                          <label htmlFor="blue" className="figma-checkbox-label">Blue</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="brown" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('brown')}
+                            onChange={() => handleFilterChange('color', 'brown')}
+                          />
+                          <label htmlFor="brown" className="figma-checkbox-label">Brown</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="green" 
+                            className="figma-checkbox"
+                            checked={filters.color.includes('green')}
+                            onChange={() => handleFilterChange('color', 'green')}
+                          />
+                          <label htmlFor="green" className="figma-checkbox-label">Green</label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Brand filter - just label with expandable section */}
+                <div className="figma-filter-section">
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('brand')}
+                    data-expanded={expandedFilter === 'brand'}
+                  >
+                    brand
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'brand' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
+                  </div>
+                  {expandedFilter === 'brand' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-checkbox-group">
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="nike" 
+                            className="figma-checkbox"
+                            checked={filters.brand.includes('nike')}
+                            onChange={() => handleFilterChange('brand', 'nike')}
+                          />
+                          <label htmlFor="nike" className="figma-checkbox-label">Nike</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="adidas" 
+                            className="figma-checkbox"
+                            checked={filters.brand.includes('adidas')}
+                            onChange={() => handleFilterChange('brand', 'adidas')}
+                          />
+                          <label htmlFor="adidas" className="figma-checkbox-label">Adidas</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="jordan" 
+                            className="figma-checkbox"
+                            checked={filters.brand.includes('jordan')}
+                            onChange={() => handleFilterChange('brand', 'jordan')}
+                          />
+                          <label htmlFor="jordan" className="figma-checkbox-label">Jordan</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="newbalance" 
+                            className="figma-checkbox"
+                            checked={filters.brand.includes('newbalance')}
+                            onChange={() => handleFilterChange('brand', 'newbalance')}
+                          />
+                          <label htmlFor="newbalance" className="figma-checkbox-label">New Balance</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="puma" 
+                            className="figma-checkbox"
+                            checked={filters.brand.includes('puma')}
+                            onChange={() => handleFilterChange('brand', 'puma')}
+                          />
+                          <label htmlFor="puma" className="figma-checkbox-label">Puma</label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Material filter - expanded with checkboxes by default */}
+                <div className="figma-filter-section">
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('material')}
+                    data-expanded={expandedFilter === 'material'}
+                  >
+                    material
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'material' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
+                  </div>
+                  {expandedFilter === 'material' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-checkbox-group">
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="leather" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Leather")}
+                            onChange={() => handleFilterChange('material', "Leather")}
+                          />
+                          <label htmlFor="leather" className="figma-checkbox-label">Leather</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="bio-leather" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Bio Leather")}
+                            onChange={() => handleFilterChange('material', "Bio Leather")}
+                          />
+                          <label htmlFor="bio-leather" className="figma-checkbox-label">Bio Leather</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="textile" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Textile")}
+                            onChange={() => handleFilterChange('material', "Textile")}
+                          />
+                          <label htmlFor="textile" className="figma-checkbox-label">Textile</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="rubber" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Rubber")}
+                            onChange={() => handleFilterChange('material', "Rubber")}
+                          />
+                          <label htmlFor="rubber" className="figma-checkbox-label">Rubber</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="nonwoven" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Nonwoven")}
+                            onChange={() => handleFilterChange('material', "Nonwoven")}
+                          />
+                          <label htmlFor="nonwoven" className="figma-checkbox-label">Nonwoven</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="synthetic" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Synthetic")}
+                            onChange={() => handleFilterChange('material', "Synthetic")}
+                          />
+                          <label htmlFor="synthetic" className="figma-checkbox-label">Synthetic</label>
+                        </div>
+                        <div className="figma-checkbox-item">
+                          <input 
+                            type="checkbox" 
+                            id="recycled" 
+                            className="figma-checkbox"
+                            checked={filters.material.includes("Recycled Content")}
+                            onChange={() => handleFilterChange('material', "Recycled Content")}
+                          />
+                          <label htmlFor="recycled" className="figma-checkbox-label">Recycled Content</label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Price filter - just label with expandable section */}
+                <div className="figma-filter-section">
+                  <div 
+                    className="figma-filter-label"
+                    onClick={() => toggleFilterExpansion('price')}
+                    data-expanded={expandedFilter === 'price'}
+                  >
+                    price
+                    <span className="figma-filter-arrow">
+                      <img 
+                        src={chevronIcon} 
+                        alt="toggle" 
+                        className={`chevron-icon ${expandedFilter === 'price' ? 'chevron-down' : 'chevron-right'}`}
+                      />
+                    </span>
+                  </div>
+                  {expandedFilter === 'price' && (
+                    <div className="figma-filter-content">
+                      <div className="figma-price-range">
+                        <input 
+                          type="number" 
+                          className="figma-price-input"
+                          placeholder="Min"
+                          value={filters.price.min || ''}
+                          onChange={(e) => handlePriceChange('min', e.target.value)}
+                        />
+                        <span>-</span>
+                        <input 
+                          type="number" 
+                          className="figma-price-input"
+                          placeholder="Max"
+                          value={filters.price.max || ''}
+                          onChange={(e) => handlePriceChange('max', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
               {/* Right side content with results */}
-              <div className="figma-results">
+              <div className={`figma-results ${!isFilterVisible ? 'full-width' : ''}`}>
                 {loading ? (
                   <div className="figma-loading">
                     <div className="figma-spinner"></div>
                     <p>Searching for sneakers...</p>
                   </div>
                 ) : (
-                  <div className="figma-grid">
+                  <div className={`figma-grid ${!isFilterVisible ? 'five-column' : 'four-column'}`}>
                     {displayResults.map((sneaker) => (
                       <div 
                         key={sneaker.id} 

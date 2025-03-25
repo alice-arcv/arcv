@@ -1159,3 +1159,750 @@ select {
   text-align: center;
   padding: 2rem;
 }
+/* Update these styles in frontend/src/styles/arcv-figma.css */
+
+/* Make the sidebar auto-height instead of extending to the bottom */
+.figma-sidebar {
+  width: 285px;
+  flex-shrink: 0;
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px 15px; /* Reduced padding */
+  background-color: #121212;
+  height: auto; /* Make it auto-height */
+  align-self: flex-start; /* Prevent stretching to bottom */
+}
+
+/* Make the filter section labels smaller and reduce spacing */
+.figma-filter-section {
+  margin-bottom: 25px; /* Reduced from 60px */
+}
+
+/* Make filter labels 30% smaller */
+.figma-filter-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fffceb;
+  font-size: 12.6px; /* Reduced by 30% from 18px */
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 5px; /* Add a little space after the label */
+}
+
+/* Make the circle smaller to match */
+.filter-arrow-circle {
+  width: 22px; /* Reduced from 30px */
+  height: 22px; /* Reduced from 30px */
+  border-radius: 50%;
+  border: 1px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px; /* Smaller arrow text */
+}
+
+/* Make filter content 30% smaller */
+.figma-filter-content {
+  margin-top: 10px; /* Reduced from 15px */
+  padding-left: 8px; /* Reduced from 10px */
+}
+
+/* Make the checkbox text 30% smaller */
+.figma-checkbox-label {
+  font-size: 11.2px; /* Reduced by 30% from 16px */
+  color: #fffceb;
+}
+
+/* Reduce spacing between checkboxes */
+.figma-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Reduced from 15px */
+}
+
+/* Make checkboxes a bit smaller */
+.figma-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px; /* Reduced from 12px */
+}
+
+/* Make the price inputs smaller too */
+.figma-price-input {
+  flex: 1;
+  padding: 6px 8px; /* Reduced padding */
+  background-color: transparent;
+  border: 1px solid #777;
+  border-radius: 4px;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 11.2px; /* Reduced by 30% */
+}
+/* Add to frontend/src/styles/arcv-figma.css */
+
+/* Custom checkbox styling */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  margin-left: 15px;
+}
+
+.checkbox-container .option-label {
+  color: white;
+  margin-right: auto;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background-color: transparent;
+  border: 1px solid #888;
+  border-radius: 4px;
+}
+
+.checkbox-container input:checked ~ .checkbox-custom {
+  background-color: rgba(200, 200, 200, 0.3);
+  border-color: #888;
+}
+
+/* Filter category styling */
+.filter-category {
+  margin-bottom: 20px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  font-family: monospace;
+  padding: 10px 0;
+}
+
+.filter-options {
+  padding: 10px 0;
+}
+
+.arrow-icon {
+  transition: transform 0.3s ease;
+}
+
+.arrow-icon.open {
+  transform: rotate(180deg);
+}
+/* Add to src/styles/arcv-figma.css */
+
+/* Search bar container with icons */
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icons {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  gap: 15px;
+}
+
+.filter-icon, .sort-icon {
+  cursor: pointer;
+  position: relative;
+}
+
+/* Sort dropdown styles */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin-top: 5px;
+  z-index: 100;
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: white;
+}
+
+.sort-option:hover {
+  background-color: #2a2a2a;
+}
+
+.sort-option.active {
+  background-color: #333;
+}
+
+/* Transition for filters panel */
+.filters-panel {
+  transition: all 0.3s ease;
+}
+/* Add to your arcv-figma.css file for the sort dropdown and filter icon */
+
+/* Search container with icons */
+.figma-search {
+  position: relative;
+  width: 50%;
+  max-width: 600px;
+}
+
+/* Icons container for filter and sort */
+.search-icons {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-icon, .sort-icon {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.filter-icon:hover, .sort-icon:hover {
+  opacity: 1;
+}
+
+.filter-icon.active-filter {
+  opacity: 1;
+}
+
+/* Sort dropdown styles */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fffceb;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:hover {
+  background-color: #2a2a2a;
+}
+
+.sort-option.active {
+  background-color: #333;
+}
+
+/* Transition for filters panel */
+.figma-sidebar {
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.figma-sidebar.visible {
+  width: 250px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.figma-sidebar.hidden {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-20px);
+  overflow: hidden;
+}
+
+/* Adjust the results container for when filter is hidden */
+.figma-results.full-width {
+  width: 100%;
+}/* Update the figma-results.full-width class to fill more space */
+.figma-results.full-width {
+  width: 100%;
+}
+
+/* Standard grid with 4 columns when sidebar is visible */
+.figma-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  transition: all 0.3s ease;
+}
+
+/* Switch to 5 columns when sidebar is hidden */
+.figma-results.full-width .figma-grid {
+  grid-template-columns: repeat(5, 1fr);
+}
+/* Add to the end of your frontend/src/styles/arcv-figma.css file */
+
+/* Improved filter toggle and grid re-layout */
+.figma-main {
+  display: flex;
+  width: 100%;
+  gap: 40px;
+  position: relative;
+}
+
+/* Enhanced search icons container */
+.search-icons {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filter-icon, .sort-icon {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.filter-icon:hover, .sort-icon:hover {
+  opacity: 1;
+}
+
+.filter-icon.active-filter {
+  opacity: 1;
+}
+
+/* Sort dropdown styles */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fffceb;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:hover {
+  background-color: #2a2a2a;
+}
+
+.sort-option.active {
+  background-color: #333;
+}
+
+/* Smoothly transitioning sidebar */
+.figma-sidebar {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.figma-sidebar.hidden {
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.figma-sidebar.visible {
+  width: 190px !important;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Full-width results with responsive grid */
+.figma-results {
+  flex: 1;
+  transition: all 0.3s ease;
+}
+
+.figma-results.full-width {
+  width: 100%;
+  padding-left: 0;
+}
+
+/* Standard grid with 4 columns when sidebar is visible */
+.figma-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  transition: all 0.3s ease;
+}
+
+/* Switch to 5 columns when sidebar is hidden */
+.figma-results.full-width .figma-grid {
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  margin-left: 0;
+}
+/* Add this to the end of your arcv-figma.css file */
+
+/* Restore original filter sidebar width */
+.figma-sidebar.visible {
+  width: 250px !important; /* Override the previous 190px width */
+}
+
+.figma-sidebar {
+  width: 250px !important; /* Base width when visible */
+}
+/* Add this to the end of your arcv-figma.css file */
+
+/* Remove arrows/spinners from number inputs */
+.figma-price-input {
+  -webkit-appearance: textfield !important;
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+/* Hide arrows for Chrome, Safari, Edge, Opera */
+.figma-price-input::-webkit-outer-spin-button,
+.figma-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+/* Ensure sort dropdown appears in front of product cards */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 1000; /* Increased z-index to appear above products */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
+}
+
+/* Updated chevron styling to match Figma reference */
+.figma-control-btn {
+  background: none;
+  border: none;
+  color: #fffceb;
+  font-size: 16px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Create the chevron up icon */
+.figma-control-btn::after {
+  content: "^";
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-weight: bold;
+  transform: scaleX(1.5); /* Make it wider to match reference */
+}
+
+/* Make filter arrow circles match the Figma design */
+.filter-arrow-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-arrow-circle span {
+  font-size: 8px;
+  transform: scaleY(0.7); /* Flatten chevrons slightly to match reference */
+}
+/* Update the sort dropdown z-index to ensure it appears in front of products */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 1000; /* Increase this value to ensure it's above product grid */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Optional: add shadow for better visibility */
+}
+/* Position icons inside the search input */
+.figma-search {
+  position: relative;
+}
+
+.figma-search-input {
+  padding-right: 80px; /* Make room for icons */
+}
+
+.search-icons {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.filter-icon, .sort-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.filter-icon:hover, .sort-icon:hover {
+  opacity: 0.8;
+}
+/* Add this to your frontend/src/styles/arcv-figma.css file */
+
+/* Updated search icons positioning - on the left side */
+.search-icons {
+  position: absolute;
+  left: 15px; /* Change from right to left */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 1001; /* Keep the high z-index */
+}
+
+/* Add padding-left to the search input to make room for icons */
+.figma-search-input {
+  padding-left: 80px !important; /* Add padding to the left instead of right */
+  padding-right: 20px; /* Reset right padding to default */
+}
+/* Higher specificity to override all other search-icons rules */
+.figma-search .search-icons.left-positioned {
+  position: absolute !important;
+  left: 15px !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  z-index: 1001 !important;
+}
+
+/* Also make sure the input has proper padding */
+.figma-search-input {
+  padding-left: 80px !important;
+  padding-right: 20px !important;
+}
+/* RIGHT POSITIONED SEARCH ICONS - Add this to the end of your CSS file */
+.figma-search {
+  position: relative;
+}
+
+.figma-search-input {
+  padding-right: 80px !important; /* Make room for icons on the right */
+  padding-left: 20px !important; /* Reset left padding */
+}
+
+.search-icons {
+  position: absolute !important;
+  right: 15px !important;
+  left: auto !important; /* Override any left positioning */
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  z-index: 1001 !important;
+}
+
+/* Sort dropdown styles - ensure proper positioning with right alignment */
+.sort-icon {
+  position: relative;
+}
+
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: auto;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 9999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.folder-list {
+  max-height: 300px; /* Adjust this value based on how tall you want the list */
+  overflow-y: auto; /* This enables vertical scrolling */
+  padding-right: 5px; /* Adds a bit of space for the scrollbar */
+}
+/* Add scrolling to folder list */
+.folder-list {
+  max-height: 300px; /* Adjust this value based on how tall you want the list */
+  overflow-y: auto; /* This enables vertical scrolling */
+  padding-right: 5px; /* Adds a bit of space for the scrollbar */
+}
+
+/* Style the folder icon images */
+.figma-folder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+/* Add these styles to your arcv-figma.css file */
+
+/* Grid layout adjustments for 4/5 columns */
+.figma-grid.four-column {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  transition: all 0.3s ease;
+}
+
+.figma-grid.five-column {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  transition: all 0.3s ease;
+}
+
+/* Improved filter toggle button styles */
+.filter-toggle {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.filter-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.filter-toggle.active-filter {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Make the filter sidebar transition smoothly */
+.figma-sidebar {
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+}
+
+.figma-sidebar.visible {
+  width: 190px;
+  opacity: 1;
+  transform: translateX(0);
+  padding: 10px 8px;
+}
+
+.figma-sidebar.hidden {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-20px);
+  border: none;
+}
+
+/* Smooth transition for the results container */
+.figma-results {
+  transition: width 0.3s ease, flex 0.3s ease;
+}
+
+.figma-results.full-width {
+  width: 100%;
+}
+
+/* Fix for the main layout */
+.figma-main {
+  display: flex;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+/* Chevron icon styling */
+.chevron-icon {
+  width: 10px;
+  height: 10px;
+  transition: transform 0.2s ease;
+}
+
+.chevron-right {
+  transform: rotate(-90deg);
+}
+
+.chevron-down {
+  transform: rotate(0deg);
+}
+/* Updated styling for filter icons without the circle */
+.figma-filter-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.chevron-icon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+
+.chevron-right {
+  transform: rotate(-90deg);
+}
+
+.chevron-down {
+  transform: rotate(0deg);
+}
