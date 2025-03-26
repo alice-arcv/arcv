@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/arcv-figma.css';
-import '../styles/folders-page.css';
-import '../styles/dropdown-menu.css';
-import '../styles/figma-override.css'; // This should be imported last
+// Only import our new CSS file
+import '../styles/simple-folders.css';
 
-// Import the logo image to match FigmaSearchInterface
+// Import the logo image
 import logoImage from '../images/arcv-logo.png';
 
-const FoldersPage = ({ onBack }) => {
+const SimpleFoldersPage = ({ onBack }) => {
   const [folders, setFolders] = useState([]);
   const [filteredFolders, setFilteredFolders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -267,77 +265,82 @@ const FoldersPage = ({ onBack }) => {
   };
 
   return (
-    <div className="figma-container">
-      {/* Header with logo and search - Updated to match FigmaSearchInterface */}
-      <div className="figma-header">
+    <div className="simple-folders-page">
+      {/* Header with logo and search */}
+      <div className="simple-header">
         {/* Logo that acts as a back button */}
-        <div className="figma-logo" onClick={handleBackClick} style={{ cursor: 'pointer' }}>
-          <img src={logoImage} alt="ARCV Logo" className="figma-logo-image" />
+        <div className="simple-logo" onClick={handleBackClick}>
+          <img src={logoImage} alt="ARCV Logo" />
         </div>
         
-        {/* Search input centered with filter toggle and sort button inside */}
-        <div className="figma-search">
+        {/* Search input */}
+        <div className="simple-search">
           <input
             type="text"
-            className="figma-search-input"
+            className="simple-search-input"
             placeholder="search folders, tags, content..."
             value={searchTerm}
             onChange={handleSearchChange}
           />
           
-          {/* Sort dropdown button inside search input */}
-          <div className="search-icons">
-            {/* Sort dropdown button */}
-            <div className="sort-icon" onClick={() => setSortMenuOpen(!sortMenuOpen)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 14l5 5 5-5M7 10l5-5 5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              
-              {/* Sort dropdown menu */}
-              {sortMenuOpen && (
-                <div className="sort-dropdown">
-                  <div className={`sort-option ${sortOption === 'newest' ? 'active' : ''}`} 
-                       onClick={() => handleSortChange('newest')}>
-                    Newest First
-                  </div>
-                  <div className={`sort-option ${sortOption === 'oldest' ? 'active' : ''}`} 
-                       onClick={() => handleSortChange('oldest')}>
-                    Oldest First
-                  </div>
-                  <div className={`sort-option ${sortOption === 'alpha-asc' ? 'active' : ''}`} 
-                       onClick={() => handleSortChange('alpha-asc')}>
-                    A-Z
-                  </div>
-                  <div className={`sort-option ${sortOption === 'alpha-desc' ? 'active' : ''}`} 
-                       onClick={() => handleSortChange('alpha-desc')}>
-                    Z-A
-                  </div>
+          {/* Sort dropdown button */}
+          <div className="simple-sort-icon" onClick={() => setSortMenuOpen(!sortMenuOpen)}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 14l5 5 5-5M7 10l5-5 5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            
+            {/* Sort dropdown menu */}
+            {sortMenuOpen && (
+              <div className="simple-sort-dropdown">
+                <div 
+                  className={`simple-sort-option ${sortOption === 'newest' ? 'active' : ''}`} 
+                  onClick={() => handleSortChange('newest')}
+                >
+                  Newest First
                 </div>
-              )}
-            </div>
+                <div 
+                  className={`simple-sort-option ${sortOption === 'oldest' ? 'active' : ''}`} 
+                  onClick={() => handleSortChange('oldest')}
+                >
+                  Oldest First
+                </div>
+                <div 
+                  className={`simple-sort-option ${sortOption === 'alpha-asc' ? 'active' : ''}`} 
+                  onClick={() => handleSortChange('alpha-asc')}
+                >
+                  A-Z
+                </div>
+                <div 
+                  className={`simple-sort-option ${sortOption === 'alpha-desc' ? 'active' : ''}`} 
+                  onClick={() => handleSortChange('alpha-desc')}
+                >
+                  Z-A
+                </div>
+              </div>
+            )}
           </div>
         </div>
         
-        {/* Control buttons on the right */}
-        <div className="figma-controls">
-          <button className="figma-control-btn">^</button>
-          <button className="figma-control-btn">=</button>
-          <div className="figma-user-icon"></div>
+        {/* Control buttons */}
+        <div className="simple-controls">
+          <button className="simple-control-btn">^</button>
+          <button className="simple-control-btn">=</button>
+          <div className="simple-user-icon"></div>
         </div>
       </div>
       
       {/* Back to Search Link */}
-      <div className="back-to-search">
-        <button onClick={handleBackClick} className="back-button">
+      <div className="simple-back">
+        <button onClick={handleBackClick} className="simple-back-button">
           ← Back to Search
         </button>
         
         {/* Show active tag filter if any */}
         {activeTag && (
-          <div className="active-tag-filter">
-            Filtering by: <span className="active-tag">#{activeTag}</span>
+          <div className="simple-tag-filter">
+            Filtering by: <span className="simple-active-tag">#{activeTag}</span>
             <button 
-              className="clear-tag-filter" 
+              className="simple-clear-filter" 
               onClick={() => setActiveTag(null)}
             >
               ×
@@ -348,119 +351,65 @@ const FoldersPage = ({ onBack }) => {
       
       {/* Folders grid */}
       {loading ? (
-        <div className="loading">Loading folders...</div>
+        <div className="simple-loading">Loading folders...</div>
       ) : filteredFolders.length === 0 ? (
-        <div className="no-results">No folders match your search</div>
+        <div className="simple-no-results">No folders match your search</div>
       ) : (
-        <div className="figma-content">
-          <div className="figma-folders-grid">
-            {filteredFolders.map((folder) => (
-              <div 
-                key={folder.id} 
-                className="figma-folder-card-container"
-                onClick={() => handleFolderClick(folder.id)}
-              >
-                {/* New folder card design with tab shape */}
-                <div className="folder-card-outer">
-                  {/* Tab part of the folder */}
-                  <div className="folder-tab">
-                    <div className="folder-title">
-                      {folder.name}
-                    </div>
-                    
-                    {/* Three dots menu in tab */}
-                    <button
-                      className="folder-menu-button"
-                      onClick={(e) => toggleMenu(folder.id, e)}
-                    >
-                      <span className="dots">•••</span>
-                    </button>
-                    
-                    {activeMenu === folder.id && (
-                      <div className="folder-dropdown-menu">
-                        <button>
-                          <span className="menu-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" fill="#333"/>
-                            </svg>
-                          </span> Edit Information
-                        </button>
-                        <button>
-                          <span className="menu-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="#333"/>
-                            </svg>
-                          </span> Duplicate
-                        </button>
-                        <button onClick={(e) => handleDeleteClick(folder.id, e)}>
-                          <span className="menu-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#333"/>
-                            </svg>
-                          </span> Delete
-                        </button>
-                        <button>
-                          <span className="menu-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z" fill="#333"/>
-                            </svg>
-                          </span> Send
-                        </button>
-                        <button>
-                          <span className="menu-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z" fill="#333"/>
-                            </svg>
-                          </span> Download
-                        </button>
-                      </div>
-                    )}
-                  </div>
+        <div className="simple-folders-grid">
+          {filteredFolders.map((folder) => (
+            <div 
+              key={folder.id} 
+              className="simple-folder-item"
+              onClick={() => handleFolderClick(folder.id)}
+            >
+              {/* Folder box with image */}
+              <div className="simple-folder-box">
+                {/* Menu button in top left */}
+                <div className="simple-menu-dots" onClick={(e) => toggleMenu(folder.id, e)}>
+                  •••
                   
-                  {/* Main folder body with image */}
-                  <div className="folder-body" style={{ width: '700px', height: '400px' }}>
-                    <div className="folder-image-container">
-                      <img 
-                        src={folder.imageUrl} 
-                        alt={folder.name} 
-                        className="folder-image"
-                      />
+                  {/* Dropdown menu */}
+                  {activeMenu === folder.id && (
+                    <div className="simple-dropdown">
+                      <button>Edit Information</button>
+                      <button>Duplicate</button>
+                      <button onClick={(e) => handleDeleteClick(folder.id, e)}>Delete</button>
+                      <button>Send</button>
+                      <button>Download</button>
                     </div>
-                    
-                    {/* Folder name and tags at bottom */}
-                    <div className="folder-label-area">
-                      <div className="folder-name-tag">
-                        :{folder.name}
-                      </div>
-                      <div className="folder-hashtags">
-                        {folder.tags.map((tag, index) => (
-                          <span 
-                            key={index} 
-                            className={`folder-hashtag ${activeTag === tag ? 'active' : ''}`}
-                            onClick={(e) => handleTagClick(tag, e)}
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  )}
+                </div>
+                
+                {/* Folder image */}
+                <img 
+                  src={folder.imageUrl} 
+                  alt={folder.name} 
+                  className="simple-folder-image"
+                />
+              </div>
+              
+              {/* Title and tags below folder */}
+              <div className="simple-folder-info">
+                <div className="simple-folder-title">:{folder.name}</div>
+                <div className="simple-folder-tags">
+                  {folder.tags.map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className={`simple-folder-tag ${activeTag === tag ? 'active' : ''}`}
+                      onClick={(e) => handleTagClick(tag, e)}
+                    >
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               </div>
-            ))}
-            
-            {/* New Archive Card - Styled to match the Figma reference */}
-            <div className="figma-folder-card-container" onClick={handleNewFolderClick}>
-              <div className="folder-card-outer new-archive">
-                <div className="folder-tab new-archive-tab">
-                  <div className="folder-title">new archive</div>
-                </div>
-                <div className="folder-body new-archive-body">
-                  <div className="new-archive-content">
-                    <div>+</div>
-                  </div>
-                </div>
-              </div>
+            </div>
+          ))}
+          
+          {/* New folder button - simple dashed rectangle */}
+          <div className="simple-folder-item" onClick={handleNewFolderClick}>
+            <div className="simple-new-folder">
+              <div className="simple-plus-icon">+</div>
             </div>
           </div>
         </div>
@@ -468,10 +417,10 @@ const FoldersPage = ({ onBack }) => {
       
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
-        <div className="confirm-dialog-overlay">
-          <div className="confirm-dialog">
+        <div className="simple-overlay">
+          <div className="simple-confirm-dialog">
             <p>Are you sure you want to delete this folder?</p>
-            <div className="confirm-dialog-buttons">
+            <div className="simple-dialog-buttons">
               <button onClick={cancelDelete}>Cancel</button>
               <button onClick={confirmDelete}>Delete</button>
             </div>
@@ -481,12 +430,12 @@ const FoldersPage = ({ onBack }) => {
       
       {/* New Folder Modal */}
       {showNewFolderModal && (
-        <div className="modal-overlay" onClick={() => setShowNewFolderModal(false)}>
-          <div className="new-folder-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="simple-overlay" onClick={() => setShowNewFolderModal(false)}>
+          <div className="simple-modal" onClick={(e) => e.stopPropagation()}>
             <h2>Create New Folder</h2>
             
-            <div className="modal-form">
-              <div className="form-group">
+            <div className="simple-form">
+              <div className="simple-form-group">
                 <label>Folder Name</label>
                 <input 
                   type="text" 
@@ -495,18 +444,18 @@ const FoldersPage = ({ onBack }) => {
                 />
               </div>
               
-              <div className="form-group">
+              <div className="simple-form-group">
                 <label>Tags</label>
-                <div className="tags-editor">
+                <div className="simple-tags-editor">
                   {newFolderData.tags.map((tag, index) => (
-                    <div key={index} className="tag-edit-item">
+                    <div key={index} className="simple-tag-item">
                       <input 
                         type="text"
                         value={tag}
                         onChange={(e) => handleNewFolderTagChange(index, e.target.value)}
                       />
                       <button 
-                        className="remove-tag-btn"
+                        className="simple-remove-btn"
                         onClick={() => handleRemoveNewFolderTag(index)}
                       >
                         ×
@@ -515,23 +464,23 @@ const FoldersPage = ({ onBack }) => {
                   ))}
                 </div>
                 <button 
-                  className="modal-btn"
+                  className="simple-btn"
                   onClick={handleAddNewFolderTag}
                 >
                   Add Tag
                 </button>
               </div>
               
-              <div className="form-group">
+              <div className="simple-form-group">
                 <label>Images</label>
-                <div className="images-preview">
+                <div className="simple-images-preview">
                   {newFolderData.images.map((img, index) => (
-                    <div key={index} className="preview-image">
+                    <div key={index} className="simple-preview">
                       <img src={img} alt={`Preview ${index}`} />
                     </div>
                   ))}
                   
-                  <div className="add-image-btn" onClick={handleAddImage}>
+                  <div className="simple-add-image" onClick={handleAddImage}>
                     <span>+</span>
                     <p>Add Image</p>
                   </div>
@@ -539,15 +488,15 @@ const FoldersPage = ({ onBack }) => {
               </div>
             </div>
             
-            <div className="modal-actions">
+            <div className="simple-modal-actions">
               <button 
-                className="cancel-btn"
+                className="simple-cancel-btn"
                 onClick={() => setShowNewFolderModal(false)}
               >
                 Cancel
               </button>
               <button 
-                className="create-btn"
+                className="simple-create-btn"
                 onClick={handleCreateFolder}
               >
                 Create Folder
@@ -560,4 +509,4 @@ const FoldersPage = ({ onBack }) => {
   );
 };
 
-export default FoldersPage;
+export default SimpleFoldersPage;

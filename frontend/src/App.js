@@ -1,7 +1,8 @@
 // frontend/src/App.js
 import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import FigmaSearchInterface from './components/FigmaSearchInterface';
-import FoldersPage from './components/FoldersPage';
+import SimpleFoldersPage from './components/SimpleFoldersPage'; // Changed to SimpleFoldersPage
 import ImageSearchPage from './components/ImageSearchPage';
 import ApiTester from './components/ApiTester'; // Import the tester
 import './styles/arcv-figma.css';
@@ -74,29 +75,31 @@ function App() {
   };
   
   return (
-    <div className="App">
-      {currentPage === 'search' ? (
-        <FigmaSearchInterface 
-          savedFolders={savedFolders}
-          savedProducts={savedProducts}
-          onCreateFolder={createFolder}
-          onSaveProduct={saveProductToFolder}
-          onGoToFolders={goToFoldersPage}
-          onGoToImageSearch={goToImageSearchPage}
-        />
-      ) : currentPage === 'folders' ? (
-        <FoldersPage 
-          savedFolders={savedFolders}
-          savedProducts={savedProducts}
-          onBack={goToSearchPage}
-        />
-      ) : (
-        <ImageSearchPage 
-          onBack={goToSearchPage}
-        />
-      )}
-      <ApiTester /> {/* Keep the tester if needed */}
-    </div>
+    <Router>
+      <div className="App">
+        {currentPage === 'search' ? (
+          <FigmaSearchInterface 
+            savedFolders={savedFolders}
+            savedProducts={savedProducts}
+            onCreateFolder={createFolder}
+            onSaveProduct={saveProductToFolder}
+            onGoToFolders={goToFoldersPage}
+            onGoToImageSearch={goToImageSearchPage}
+          />
+        ) : currentPage === 'folders' ? (
+          <SimpleFoldersPage // Changed from FoldersPage to SimpleFoldersPage 
+            savedFolders={savedFolders}
+            savedProducts={savedProducts}
+            onBack={goToSearchPage}
+          />
+        ) : (
+          <ImageSearchPage 
+            onBack={goToSearchPage}
+          />
+        )}
+        <ApiTester /> {/* Keep the tester if needed */}
+      </div>
+    </Router>
   );
 }
 
