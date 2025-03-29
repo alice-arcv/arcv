@@ -1,0 +1,677 @@
+/* Main container */
+.simple-folders-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #121212;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  padding: 22px 30px; /* Scaled down padding */
+}
+
+/* Header with logo and search - matched with Figma search interface */
+.simple-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding-top: 15px; 
+  width: 100%;
+}
+
+.simple-logo {
+  cursor: pointer;
+}
+
+.simple-logo img {
+  height: 60px; /* Match figma search interface size */
+  width: auto;
+}
+
+/* Search input styling - matched with Figma search interface */
+.simple-search {
+  position: relative;
+  max-width: 600px; /* Match figma search interface size */
+  width: 50%;
+}
+
+.simple-search-input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: 1px solid #333;
+  background-color: #121212;
+  color: #fffceb;
+  font-size: 14px;
+  font-family: 'Space Mono', monospace;
+}
+
+.simple-search-input:focus {
+  outline: none;
+}
+
+/* Sort icon and dropdown - Updated to match FigmaSearchInterface */
+.simple-sort-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.simple-sort-icon:hover {
+  opacity: 1;
+}
+
+/* Fixed Sort dropdown styling to ensure it appears correctly */
+.simple-sort-dropdown {
+  position: absolute;
+  top: 45px; /* Position below the search input */
+  right: 10px; /* Align with the right side of search input */
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  width: 180px;
+  z-index: 1000000; /* Very high z-index to ensure it appears above everything */
+  overflow: visible;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.simple-sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fffceb;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+
+.simple-sort-option:hover {
+  background-color: #2a2a2a;
+}
+
+.simple-sort-option.active {
+  background-color: #333;
+}
+
+/* Control buttons - matched with Figma search interface */
+.simple-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.simple-control-btn {
+  background: none;
+  border: none;
+  color: #fffceb;
+  font-size: 16px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.simple-user-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+
+/* Grid size control - replaces the Back to Search button */
+.simple-grid-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px; /* Scaled down from 30px */
+}
+
+.simple-grid-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.simple-slider-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fffceb;
+  opacity: 0.7;
+}
+
+.simple-range-slider {
+  width: 120px;
+  -webkit-appearance: none;
+  height: 3px;
+  background: #555;
+  border-radius: 3px;
+  outline: none;
+}
+
+.simple-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fffceb;
+  cursor: pointer;
+}
+
+.simple-range-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fffceb;
+  cursor: pointer;
+  border: none;
+}
+
+/* Tag filter */
+.simple-tag-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Scaled down from 10px */
+  font-size: 11px; /* Scaled down from 14px */
+}
+
+.simple-active-tag {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 3px 6px; /* Scaled down padding */
+  border-radius: 3px; /* Scaled down border-radius */
+}
+
+.simple-clear-filter {
+  background: none;
+  border: none;
+  color: #fffceb;
+  font-size: 12px; /* Scaled down font-size */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Folders grid - dynamic columns based on grid size */
+.simple-folders-grid {
+  display: grid;
+  gap: 30px;
+  position: relative; /* Make sure the grid has a position context */
+  transition: all 0.3s ease; /* Add transition for smooth grid resizing */
+}
+
+/* Different column counts based on the slider value */
+.simple-folders-grid.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.simple-folders-grid.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.simple-folders-grid.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.simple-folders-grid.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* Folder item - auto size based on grid */
+.simple-folder-item-container {
+  position: relative;
+  overflow: visible;
+}
+
+.simple-folder-item {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 100%;
+  position: relative; /* Important for dropdown positioning */
+  overflow: visible; /* Allow dropdown to be visible outside the container */
+}
+
+.simple-folder-item:hover {
+  transform: translateY(-4px); /* Scaled down from -5px */
+}
+
+/* Folder box with image */
+.simple-folder-box {
+  position: relative;
+  background-color: #1a1a1a;
+  border-radius: 6px; /* Scaled down from 8px */
+  overflow: hidden;
+  padding-top: 75%; /* Maintain aspect ratio for different grid sizes */
+  width: 100%;
+}
+
+/* Menu dots in corner */
+.simple-menu-dots {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: transparent;
+  border: none;
+  width: 23px; /* Scaled down from 30px */
+  height: 23px; /* Scaled down from 30px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px; /* Scaled down font-size */
+  z-index: 90; /* Reduced z-index to be under the modal */
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* Product count badge */
+.simple-product-count {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fffceb;
+  border-radius: 50%;
+  width: 18px; /* Scaled down from 24px */
+  height: 18px; /* Scaled down from 24px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px; /* Scaled down font-size */
+  z-index: 10;
+}
+
+/* Folder dropdown menu styling */
+.simple-dropdown {
+  position: fixed;
+  background-color: rgba(245, 245, 240, 0.9); /* Cream color with 90% opacity (10% transparent) */
+  border-radius: 9px; /* Scaled down from 12px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Enhanced shadow for better visibility */
+  width: 173px; /* Scaled down from 230px */
+  z-index: 100000; /* Higher z-index, but still below the modal overlay */
+  overflow: visible;
+  font-family: 'Space Mono', monospace;
+  border: none;
+  margin: 0;
+  padding: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.simple-dropdown button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px; /* Scaled down from 16px */
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Very light divider */
+  color: #333;
+  font-size: 11px; /* Scaled down from 14px */
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: normal;
+  margin: 0;
+}
+
+.simple-dropdown button:last-child {
+  border-bottom: none;
+}
+
+.simple-dropdown button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Icon styling for menu items */
+.simple-menu-icon {
+  margin-right: 9px; /* Scaled down from 12px */
+  color: #333;
+  stroke: #333;
+  stroke-width: 1.5;
+  width: 12px; /* Scaled down from 16px */
+  height: 12px; /* Scaled down from 16px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Folder image */
+.simple-folder-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fill the entire box */
+}
+
+/* Folder info below image */
+.simple-folder-info {
+  padding: 6px 0; /* Scaled down from 8px */
+}
+
+.simple-folder-title {
+  font-size: 11px; /* Scaled down from 14px */
+  margin-bottom: 1px;
+}
+
+.simple-folder-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.simple-folder-tag {
+  font-size: 8px; /* Scaled down from 10px */
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 1px 3px; /* Scaled down padding */
+  border-radius: 3px; /* Scaled down from 4px */
+  transition: all 0.2s ease;
+}
+
+.simple-folder-tag:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fffceb;
+}
+
+.simple-folder-tag.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fffceb;
+}
+
+/* New folder button */
+.simple-new-folder {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 75%; /* Maintain aspect ratio */
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 6px; /* Scaled down from 8px */
+  transition: background-color 0.2s ease;
+}
+
+.simple-new-folder:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.simple-plus-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px; /* Scaled down from 32px */
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Loading and no results states */
+.simple-loading, .simple-no-results {
+  text-align: center;
+  padding: 30px; /* Scaled down from 40px */
+  font-size: 12px; /* Scaled down from 16px */
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Overlay for modals */
+.simple-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000000; /* Extremely high z-index to ensure it's truly above all other elements */
+}
+
+/* Confirmation dialog */
+.simple-confirm-dialog {
+  background-color: #1a1a1a;
+  border-radius: 6px; /* Scaled down from 8px */
+  padding: 18px; /* Scaled down from 24px */
+  width: 240px; /* Scaled down from 320px */
+  color: #fff;
+}
+
+.simple-confirm-dialog p {
+  margin-bottom: 18px; /* Scaled down from 24px */
+}
+
+.simple-dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px; /* Scaled down from 12px */
+}
+
+.simple-dialog-buttons button {
+  padding: 6px 12px; /* Scaled down from 8px 16px */
+  border-radius: 3px; /* Scaled down from 4px */
+  border: none;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+}
+
+.simple-dialog-buttons button:first-child {
+  background-color: #333;
+  color: #fffceb;
+}
+
+.simple-dialog-buttons button:last-child {
+  background-color: #8b251e;
+  color: #fffceb;
+}
+
+/* Modal styles for both create and edit modes */
+.simple-modal {
+  background-color: #1a1a1a;
+  border-radius: 9px; /* Scaled down from 12px */
+  padding: 36px; /* Increased padding to match screenshot */
+  width: 450px; /* Adjusted width to match screenshot */
+  max-width: 90%;
+  color: #f5f5f5;
+  font-family: 'Space Mono', monospace;
+  position: relative;
+}
+
+/* Mode-specific titles for edit mode only - REMOVED as requested */
+/* .simple-modal.edit-mode:before {
+  content: "Edit Folder";
+  display: block;
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: #f5f5f5;
+  font-family: 'Space Mono', monospace;
+} */
+
+.simple-form-group {
+  margin-bottom: 24px; /* Increased spacing between form groups */
+}
+
+.simple-form-group label {
+  display: block;
+  margin-bottom: 10px; /* Increased spacing between label and input */
+  font-weight: 500;
+  color: #f5f5f5;
+  font-size: 14px; /* Increased font size */
+}
+
+.simple-form-group input[type="text"] {
+  width: 100%;
+  padding: 12px; /* Increased padding */
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 3px; /* Scaled down from 4px */
+  color: #f5f5f5;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px; /* Increased font size */
+}
+
+/* Updated Tags UI - Single box with X */
+.simple-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 8px;
+  min-height: 45px;
+}
+
+.simple-single-tag {
+  display: flex;
+  align-items: center;
+  background-color: #333;
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+
+.simple-tag-text {
+  color: #f5f5f5;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.simple-tag-remove-btn {
+  background: none;
+  border: none;
+  color: #f5f5f5;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.simple-tag-input {
+  background: transparent;
+  border: none;
+  color: #f5f5f5;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  flex: 1;
+  min-width: 100px;
+  outline: none;
+}
+
+.simple-btn {
+  padding: 8px 16px; /* Increased padding */
+  background-color: #333;
+  border: 1px solid #444;
+  border-radius: 3px; /* Scaled down from 4px */
+  color: #f5f5f5;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; /* Adjusted font size */
+}
+
+/* Add Tag button styling */
+.simple-add-tag-btn {
+  font-weight: 500;
+  background-color: #222;
+  color: #f5f5f5;
+}
+
+.simple-images-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px; /* Scaled down from 12px */
+}
+
+.simple-preview {
+  width: 80px; /* Adjusted size to match screenshot */
+  height: 80px; /* Adjusted size to match screenshot */
+  border-radius: 3px; /* Scaled down from 4px */
+  overflow: hidden;
+}
+
+/* Changed image object-fit to "cover" to fill the entire preview box */
+.simple-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Changed to fill the entire box without cropping */
+}
+
+.simple-add-image {
+  width: 80px; /* Adjusted size to match screenshot */
+  height: 80px; /* Adjusted size to match screenshot */
+  border: 1px dashed #444;
+  border-radius: 3px; /* Scaled down from 4px */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #222;
+}
+
+.simple-add-image:hover {
+  border-color: #777;
+  background-color: #333;
+}
+
+.simple-add-image span {
+  font-size: 24px; /* Increased size for plus icon */
+  color: #f5f5f5;
+  margin-bottom: 4px;
+}
+
+.simple-add-image p {
+  margin: 0;
+  font-size: 10px; /* Adjusted font size */
+  color: #f5f5f5;
+}
+
+.simple-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px; /* Increased gap between buttons */
+  margin-top: 30px; /* Increased top margin */
+}
+
+.simple-cancel-btn, .simple-create-btn {
+  padding: 10px 20px; /* Increased padding */
+  border-radius: 3px; /* Scaled down from 4px */
+  border: none;
+  cursor: pointer;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; /* Adjusted font size */
+}
+
+.simple-cancel-btn {
+  background-color: #333;
+  color: #f5f5f5;
+}
+
+.simple-create-btn {
+  background-color: #555;
+  color: #fff;
+}
+
+/* Helper class to ensure menu dots remain at a reasonable z-index */
+.simple-menu-dots-container {
+  position: relative;
+  z-index: 90; 
+}
+
+/* Fix for the dropdown menu position and parent relationship */
+.simple-folder-item-container .simple-dropdown {
+  top: 30px !important; /* Fixed position below dots */
+  left: 8px !important; /* Align with dots left edge */
+}
