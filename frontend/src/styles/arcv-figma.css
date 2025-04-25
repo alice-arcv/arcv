@@ -1,7 +1,7 @@
 /* Import Space Mono font for the Figma design */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
-/* Reset styles for consistent rendering */
+/* Reset styles and base elements */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -19,20 +19,35 @@ body, #root, .App {
   color: #fffceb;
 }
 
-/* Figma-specific styles to exactly match the reference */
+/* Animation keyframes - consolidated */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
-/* Main container with solid background */
+@keyframes progress {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+@keyframes dnaProgress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+/* Main container */
 .figma-container {
   width: 100%;
   min-height: 100vh;
-  background-color: #121212; /* Changed from #2b2b2b to #121212 */
-  color: #fffceb; /* Cream color as requested */
+  background-color: #121212;
+  color: #fffceb;
   display: flex;
   flex-direction: column;
   padding: 24px;
 }
 
-/* Header area */
+/* Header section */
 .figma-header {
   display: flex;
   align-items: center;
@@ -41,20 +56,18 @@ body, #root, .App {
   margin-bottom: 40px;
 }
 
-/* Logo styling */
 .figma-logo {
   display: flex;
   align-items: center;
 }
 
-/* Style for the logo image */
 .figma-logo-image {
   height: 60px;
   width: auto;
   display: block;
 }
 
-/* Search area */
+/* Search component */
 .figma-search {
   position: relative;
   max-width: 600px;
@@ -66,8 +79,8 @@ body, #root, .App {
   padding: 12px 20px;
   border-radius: 30px;
   border: 1px solid #333;
-  background-color: #121212; /* Changed from #222 to #121212 */
-  color: #fffceb; /* Updated to match the theme */
+  background-color: #121212;
+  color: #fffceb;
   font-size: 14px;
   font-family: 'Space Mono', monospace;
 }
@@ -76,7 +89,35 @@ body, #root, .App {
   outline: none;
 }
 
-/* Controls area */
+/* Search icons and controls */
+.search-icons {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  z-index: 1001;
+}
+
+.filter-icon, .sort-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.filter-icon:hover, .sort-icon:hover {
+  opacity: 1;
+}
+
+.filter-icon.active-filter {
+  opacity: 1;
+}
+
 .figma-controls {
   display: flex;
   align-items: center;
@@ -86,11 +127,22 @@ body, #root, .App {
 .figma-control-btn {
   background: none;
   border: none;
-  color: #fffceb; /* Updated text color */
+  color: #fffceb;
   font-size: 16px;
   cursor: pointer;
   width: 24px;
   height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.figma-control-btn::after {
+  content: "^";
+  display: block;
+  font-family: 'Space Mono', monospace;
+  font-weight: bold;
+  transform: scaleX(1.5);
 }
 
 .figma-user-icon {
@@ -101,83 +153,259 @@ body, #root, .App {
   border: none;
 }
 
+/* Sort dropdown */
+.sort-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 10px;
+  z-index: 1000;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sort-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fffceb;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+}
+
+.sort-option:hover {
+  background-color: #2a2a2a;
+}
+
+.sort-option.active {
+  background-color: #333;
+}
+
 /* Main content area */
 .figma-content {
   flex: 1;
 }
 
-/* Main layout with sidebar and results */
 .figma-main {
   display: flex;
   gap: 40px;
+  width: 100%;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
-/* Sidebar with filters - Now 1.3X bigger */
+/* Sidebar with filters - integrated from filter-fix.css */
 .figma-sidebar {
-  width: 285px; /* Increased from 220px (220 * 1.3 = 286) */
-  flex-shrink: 0;
+  width: 250px;
+  padding: 25px 20px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  height: auto;
+  align-self: flex-start;
+  background-color: #121212;
+  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Sidebar box */
-.figma-sidebar-box {
-  border: 1px solid #333;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #121212; /* Changed from #1a1a1a to #121212 */
+.figma-sidebar.visible {
+  width: 250px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.figma-sidebar.hidden {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-20px);
+  border: none;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* Filter sections */
 .figma-filter-section {
-  margin-bottom: 32px;
+  margin-bottom: 30px;
 }
 
+/* Filter category label styling */
 .figma-filter-label {
-  display: block;
-  color: #fffceb; /* Updated text color */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Space Mono', monospace;
   font-size: 14px;
-  margin-bottom: 16px;
-  font-weight: normal;
+  font-weight: 400;
+  color: #fffceb;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  cursor: pointer;
 }
 
-/* Checkbox styling */
+/* Arrow circle indicator */
+.filter-arrow-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-arrow-circle span {
+  font-size: 7px;
+  color: #fff;
+}
+
+.figma-filter-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.chevron-icon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s ease;
+}
+
+.chevron-right {
+  transform: rotate(-90deg);
+}
+
+.chevron-down {
+  transform: rotate(0deg);
+}
+
+/* Filter content container */
+.figma-filter-content {
+  margin-top: 8px;
+  padding-left: 5px;
+}
+
+/* Group of checkboxes */
 .figma-checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 4px;
 }
 
+/* Checkbox container */
 .figma-checkbox-item {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
+  margin-left: 10px;
 }
 
+/* Checkbox styling to match reference */
 .figma-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
   width: 16px;
   height: 16px;
-  margin-right: 12px;
-  accent-color: #555;
-  background-color: #333;
-  border: 1px solid #555;
+  background-color: transparent;
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
 }
 
+/* Checked state - light gray background */
+.figma-checkbox:checked {
+  background-color: rgba(200, 200, 200, 0.3);
+  border-color: #888;
+}
+
+/* Custom checkmark style */
+.figma-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: #fffceb;
+}
+
+/* Checkbox label */
 .figma-checkbox-label {
-  font-size: 14px;
-  color: #fffceb; /* Updated text color */
+  font-size: 13px;
+  color: #ffffff;
+  opacity: 0.9;
+  margin-left: 5px;
+}
+
+/* Price range inputs container */
+.figma-price-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  width: 94%;
+  max-width: 210px;
+}
+
+/* Price input fields */
+.figma-price-input {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #777;
+  border-radius: 3px;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  background-color: transparent;
+  width: 40%;
+  min-width: 0;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.figma-price-input::-webkit-outer-spin-button,
+.figma-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Price inputs container padding */
+.figma-filter-content:has(.figma-price-range) {
+  padding-right: 8px;
+  padding-bottom: 8px;
+}
+
+/* Full width results when sidebar is hidden */
+.figma-results.full-width {
+  width: 100%;
+  padding-left: 0;
 }
 
 /* Results area */
 .figma-results {
   flex: 1;
+  transition: width 0.3s ease, flex 0.3s ease;
 }
 
-/* Loading indicator */
+/* Loading state */
 .figma-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 300px;
-  background-color: #121212; /* Changed from #1a1a1a to #121212 */
+  background-color: #121212;
   border-radius: 8px;
 }
 
@@ -186,26 +414,35 @@ body, #root, .App {
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border-top-color: #fffceb; /* Updated to match theme */
-  animation: figma-spin 1s linear infinite;
+  border-top-color: #fffceb;
+  animation: spin 1s linear infinite;
   margin-bottom: 20px;
 }
 
-@keyframes figma-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* Results grid - 4 boxes wide */
+/* Results grid with responsive columns */
 .figma-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px; /* Slightly reduced gap to fit better */
+  gap: 18px;
+  transition: all 0.3s ease;
+}
+
+.figma-results.full-width .figma-grid {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.figma-grid.four-column {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.figma-grid.five-column {
+  grid-template-columns: repeat(5, 1fr);
 }
 
 /* Product card */
 .figma-product-card {
   cursor: pointer;
-  background-color: #121212; /* Changed from #1a1a1a to #121212 */
+  background-color: #121212;
   border-radius: 8px;
   overflow: hidden;
   padding: 8px 8px 12px 8px;
@@ -214,48 +451,72 @@ body, #root, .App {
 
 .figma-product-card:hover {
   transform: translateY(-4px);
-  background-color: #222; /* Lighter on hover */
+  background-color: #222;
 }
 
-/* Product image - Further reduced size */
 .figma-product-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 1/1;
-  background-color: #121212; /* Changed from #eeeeee to #121212 */
+  background-color: #FFFFFF;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 8px;
-  /* Smaller image boxes */
-  max-height: 160px; /* Further reduced from 180px */
 }
 
 .figma-product-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-/* Product info */
+.figma-product-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.figma-save-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  color: #121212;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.figma-save-btn:hover {
+  transform: scale(1.1);
+}
+
 .figma-product-info {
-  padding: 4px 0; /* Reduced padding for smaller cards */
+  padding: 4px 0;
 }
 
 .figma-product-title {
   margin: 0 0 2px 0;
-  font-size: 13px; /* Slightly smaller font */
+  font-size: 13px;
   font-weight: bold;
   text-transform: uppercase;
-  color: #fffceb; /* Updated text color */
+  color: #fffceb;
 }
 
 .figma-product-subtitle {
-  font-size: 12px; /* Slightly smaller font */
-  color: #fffceb; /* Updated text color */
+  font-size: 12px;
+  color: #fffceb;
   font-weight: normal;
 }
-/* Product Detail View Styles */
 
-/* Back button */
+/* Product detail view */
 .figma-back-button {
   background: none;
   border: none;
@@ -265,9 +526,14 @@ body, #root, .App {
   cursor: pointer;
   display: flex;
   align-items: center;
+  padding: 0;
+  margin: 0;
 }
 
-/* Main layout */
+.figma-back-button:hover {
+  text-decoration: underline;
+}
+
 .figma-detail-container {
   display: flex;
   gap: 30px;
@@ -286,7 +552,6 @@ body, #root, .App {
   gap: 20px;
 }
 
-/* Section styles */
 .figma-detail-section {
   background-color: #121212;
   border: 1px solid #333;
@@ -457,49 +722,7 @@ body, #root, .App {
   gap: 20px;
 }
 
-/* Make product cards in search results clickable */
-.figma-product-card {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.figma-product-card:hover {
-  transform: translateY(-5px);
-}
-/* Product hover effect and save button */
-.figma-product-image {
-  position: relative;
-}
-
-.figma-product-actions {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-  z-index: 5;
-}
-
-.figma-save-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  color: #121212;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.figma-save-btn:hover {
-  transform: scale(1.1);
-}
-
-/* Folder popup styles */
+/* Folder popup */
 .figma-popup-overlay {
   position: fixed;
   top: 0;
@@ -546,6 +769,12 @@ body, #root, .App {
   font-family: 'Space Mono', monospace;
 }
 
+.folder-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
 .figma-folder-item {
   display: flex;
   align-items: center;
@@ -559,6 +788,9 @@ body, #root, .App {
 }
 
 .figma-folder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-right: 12px;
   font-size: 16px;
 }
@@ -575,7 +807,8 @@ body, #root, .App {
 .figma-new-folder .figma-folder-icon {
   font-weight: bold;
 }
-/* My Archive button */
+
+/* Folders grid and cards */
 .figma-archive-button {
   width: 100%;
   padding: 10px 15px;
@@ -595,139 +828,162 @@ body, #root, .App {
   background-color: #2a2a2a;
 }
 
-/* Folders grid layout */
+/* Integrated styles from figma-override.css - Folder card styling */
+.folder-tab {
+  width: 120px;
+  height: 30px;
+  background-color: #121212;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.folder-tab .folder-title {
+  display: none;
+}
+
+.folder-menu-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+  cursor: pointer;
+  box-shadow: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  position: static;
+  display: inline-block;
+}
+
+.dots {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.folder-body {
+  width: 310px;
+  height: 190px;
+  border-top-left-radius: 0;
+  overflow: hidden;
+  background-color: #121212;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Properly spaced grid for folders */
 .figma-folders-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(348px, 1fr));
+  gap: 8px;
   width: 100%;
   padding: 20px;
 }
 
-/* Folder card */
-.figma-folder-card {
-  position: relative;
-  background-color: #121212;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-  border: 1px solid #333;
+.folder-body.new-archive-body {
+  width: 310px;
+  height: 190px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-top: none;
+  background-color: transparent;
 }
 
-.figma-folder-card:hover {
-  transform: translateY(-5px);
-  background-color: #1d1d1d;
-}
-
-/* Folder preview layout */
-.figma-folder-preview {
+.figma-folders-grid .folder-card-outer {
   display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 240px;
+  flex-direction: column;
+  overflow: visible;
 }
 
-.figma-folder-main-preview {
-  width: 100%;
-  height: 170px;
-  overflow: hidden;
-}
-
-.figma-folder-main-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.figma-folder-small-previews {
-  display: flex;
-  width: 100%;
-  height: 70px;
-}
-
-.figma-folder-small-preview {
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.figma-folder-small-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Folder tags */
-.figma-folder-tags {
-  padding: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.figma-folder-tag {
-  color: #fffceb;
-  font-size: 12px;
-}
-
-/* Folder actions */
-.figma-folder-actions {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  gap: 8px;
-  z-index: 5;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.figma-folder-card:hover .figma-folder-actions {
-  opacity: 1;
-}
-
-.figma-folder-action-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: none;
-  color: #121212;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.figma-folder-action-btn:hover {
-  transform: scale(1.1);
-}
-
-.figma-action-icon {
-  font-size: 16px;
-  line-height: 1;
-}
-/* Back button styling */
-.figma-back-button {
+.folder-label-area {
+  position: static;
+  display: block;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  padding: 10px 0;
   background: none;
-  border: none;
-  color: #fffceb;
-  font-family: 'Space Mono', monospace;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  margin-top: 1px;
 }
 
-.figma-back-button:hover {
-  text-decoration: underline;
+.folder-name-tag {
+  font-size: 16px;
+  color: #fffceb;
+  margin-bottom: 5px;
 }
-/* DNA Image Search Page - Exact Figma Reference Match */
+
+.folder-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.folder-hashtag {
+  font-size: 8px;
+  color: #fffceb;
+  opacity: 0.8;
+}
+
+.folder-body .folder-label-area {
+  display: none;
+}
+
+/* Standard folder card styling - Simplified */
+.folder-card {
+  position: relative;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  overflow: visible;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  border: 1px solid #333;
+  cursor: pointer;
+  width: 100%;
+}
+
+.folder-content {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.folder-image-container {
+  height: 150px;
+  background-color: #2a2a2a;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.folder-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.folder-name {
+  padding: 10px;
+  font-size: 14px;
+  color: #f5f5f5;
+  font-family: monospace;
+  border-top: none;
+}
+
+/* DNA Image Search Page */
 .figma-dna-content {
   background-color: #121212;
   background-image: linear-gradient(rgba(50, 50, 50, 0.1) 1px, transparent 1px),
@@ -739,7 +995,6 @@ body, #root, .App {
   font-family: 'Space Mono', monospace;
 }
 
-/* Results count label */
 .figma-dna-results-count {
   color: #fffceb;
   font-size: 16px;
@@ -748,7 +1003,6 @@ body, #root, .App {
   letter-spacing: 1px;
 }
 
-/* Panel layout */
 .figma-dna-panels {
   display: flex;
   gap: 20px;
@@ -774,7 +1028,6 @@ body, #root, .App {
   flex-direction: column;
 }
 
-/* Results list styling */
 .figma-dna-results-list {
   height: 100%;
   overflow-y: auto;
@@ -850,7 +1103,6 @@ body, #root, .App {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Loading state */
 .figma-dna-loading-container {
   position: absolute;
   top: 50%;
@@ -873,12 +1125,7 @@ body, #root, .App {
   width: 60%;
   height: 100%;
   background-color: #fffceb;
-  animation: loadingProgress 2s infinite steps(10);
-}
-
-@keyframes loadingProgress {
-  0% { width: 0%; }
-  100% { width: 100%; }
+  animation: progress 2s infinite steps(10);
 }
 
 .figma-dna-loading-text {
@@ -888,7 +1135,7 @@ body, #root, .App {
   font-family: monospace;
 }
 
-/* Image display */
+/* DNA image display */
 .figma-dna-image-display {
   flex: 1;
   display: flex;
@@ -904,7 +1151,6 @@ body, #root, .App {
   object-fit: contain;
 }
 
-/* Thumbnails */
 .figma-dna-thumbnails {
   display: flex;
   height: 90px;
@@ -934,7 +1180,7 @@ body, #root, .App {
   object-fit: cover;
 }
 
-/* Upload container */
+/* DNA upload controls */
 .figma-dna-upload-container {
   display: flex;
   flex-direction: column;
@@ -990,7 +1236,7 @@ body, #root, .App {
   font-size: 24px;
 }
 
-/* Empty state */
+/* DNA empty state */
 .figma-dna-empty-state {
   display: flex;
   align-items: center;
@@ -1002,907 +1248,53 @@ body, #root, .App {
   color: #555;
   font-size: 14px;
 }
-/* public/css/styles.css */
-:root {
-  --primary-color: #4672b4;
-  --secondary-color: #47956f;
-  --accent-color: #de953e;
-  --error-color: #8b251e;
-  --bg-color: #f5f5f7;
-  --text-color: #333;
-  --card-bg: white;
-  --border-radius: 8px;
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: var(--bg-color);
-}
-
-header {
-  background-color: var(--primary-color);
-  color: white;
-  padding: 1rem 2rem;
-  text-align: center;
-}
-
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.search-section {
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.search-container {
-  display: flex;
-  max-width: 600px;
-  margin: 1rem auto;
-}
-
-#search-input {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
-  font-size: 1rem;
-}
-
-#search-button {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.filters {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-}
-
-select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: var(--border-radius);
-}
-
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.sneaker-card {
-  background-color: var(--card-bg);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--box-shadow);
-  transition: transform 0.3s ease;
-}
-
-.sneaker-card:hover {
-  transform: translateY(-5px);
-}
-
-.sneaker-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.sneaker-info {
-  padding: 1rem;
-}
-
-.sneaker-name {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.sneaker-colorway,
-.sneaker-retail-price,
-.sneaker-release-date {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 0.25rem;
-}
-
-.view-details-btn {
-  display: block;
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.75rem;
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.view-details-btn:hover {
-  background-color: var(--primary-color);
-}
-
-.loading-indicator {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 2rem;
-}
-
-.error-message {
-  grid-column: 1 / -1;
-  text-align: center;
-  color: var(--error-color);
-  padding: 2rem;
-}
-
-.no-results {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 2rem;
-}
-/* Update these styles in frontend/src/styles/arcv-figma.css */
-
-/* Make the sidebar auto-height instead of extending to the bottom */
-.figma-sidebar {
-  width: 285px;
-  flex-shrink: 0;
-  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px 15px; /* Reduced padding */
-  background-color: #121212;
-  height: auto; /* Make it auto-height */
-  align-self: flex-start; /* Prevent stretching to bottom */
-}
-
-/* Make the filter section labels smaller and reduce spacing */
-.figma-filter-section {
-  margin-bottom: 25px; /* Reduced from 60px */
-}
-
-/* Make filter labels 30% smaller */
-.figma-filter-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #fffceb;
-  font-size: 12.6px; /* Reduced by 30% from 18px */
-  cursor: pointer;
-  position: relative;
-  margin-bottom: 5px; /* Add a little space after the label */
-}
-
-/* Make the circle smaller to match */
-.filter-arrow-circle {
-  width: 22px; /* Reduced from 30px */
-  height: 22px; /* Reduced from 30px */
-  border-radius: 50%;
-  border: 1px solid #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px; /* Smaller arrow text */
-}
-
-/* Make filter content 30% smaller */
-.figma-filter-content {
-  margin-top: 10px; /* Reduced from 15px */
-  padding-left: 8px; /* Reduced from 10px */
-}
-
-/* Make the checkbox text 30% smaller */
-.figma-checkbox-label {
-  font-size: 11.2px; /* Reduced by 30% from 16px */
-  color: #fffceb;
-}
-
-/* Reduce spacing between checkboxes */
-.figma-checkbox-group {
+/* Styles for SimpleFoldersPage component */
+.simple-folders-page {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Reduced from 15px */
-}
-
-/* Make checkboxes a bit smaller */
-.figma-checkbox {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px; /* Reduced from 12px */
-}
-
-/* Make the price inputs smaller too */
-.figma-price-input {
-  flex: 1;
-  padding: 6px 8px; /* Reduced padding */
-  background-color: transparent;
-  border: 1px solid #777;
-  border-radius: 4px;
+  min-height: 100vh;
+  background-color: #121212;
   color: #fffceb;
   font-family: 'Space Mono', monospace;
-  font-size: 11.2px; /* Reduced by 30% */
+  padding: 22px 30px;
 }
-/* Add to frontend/src/styles/arcv-figma.css */
 
-/* Custom checkbox styling */
-.checkbox-container {
+.simple-header {
   display: flex;
   align-items: center;
-  position: relative;
-  padding: 8px 0;
-  cursor: pointer;
-  font-size: 16px;
-  user-select: none;
-  margin-left: 15px;
-}
-
-.checkbox-container .option-label {
-  color: white;
-  margin-right: auto;
-}
-
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkbox-custom {
-  position: relative;
-  height: 20px;
-  width: 20px;
-  background-color: transparent;
-  border: 1px solid #888;
-  border-radius: 4px;
-}
-
-.checkbox-container input:checked ~ .checkbox-custom {
-  background-color: rgba(200, 200, 200, 0.3);
-  border-color: #888;
-}
-
-/* Filter category styling */
-.filter-category {
-  margin-bottom: 20px;
-}
-
-.filter-header {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
+  margin-bottom: 22px;
+  padding-top: 15px; 
+  width: 100%;
+}
+
+.simple-logo {
   cursor: pointer;
-  color: white;
-  font-family: monospace;
-  padding: 10px 0;
 }
 
-.filter-options {
-  padding: 10px 0;
+.simple-logo img {
+  height: 60px;
+  width: auto;
 }
 
-.arrow-icon {
-  transition: transform 0.3s ease;
-}
-
-.arrow-icon.open {
-  transform: rotate(180deg);
-}
-/* Add to src/styles/arcv-figma.css */
-
-/* Search bar container with icons */
-.search-bar-container {
+.simple-search {
   position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icons {
-  position: absolute;
-  right: 10px;
-  display: flex;
-  gap: 15px;
-}
-
-.filter-icon, .sort-icon {
-  cursor: pointer;
-  position: relative;
-}
-
-/* Sort dropdown styles */
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 200px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 4px;
-  margin-top: 5px;
-  z-index: 100;
-}
-
-.sort-option {
-  padding: 10px 15px;
-  cursor: pointer;
-  color: white;
-}
-
-.sort-option:hover {
-  background-color: #2a2a2a;
-}
-
-.sort-option.active {
-  background-color: #333;
-}
-
-/* Transition for filters panel */
-.filters-panel {
-  transition: all 0.3s ease;
-}
-/* Add to your arcv-figma.css file for the sort dropdown and filter icon */
-
-/* Search container with icons */
-.figma-search {
-  position: relative;
-  width: 50%;
   max-width: 600px;
+  width: 50%;
 }
 
-/* Icons container for filter and sort */
-.search-icons {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.filter-icon, .sort-icon {
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.filter-icon:hover, .sort-icon:hover {
-  opacity: 1;
-}
-
-.filter-icon.active-filter {
-  opacity: 1;
-}
-
-/* Sort dropdown styles */
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 180px;
-  background-color: #1a1a1a;
+.simple-search-input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 30px;
   border: 1px solid #333;
-  border-radius: 6px;
-  margin-top: 10px;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.sort-option {
-  padding: 10px 15px;
-  cursor: pointer;
+  background-color: #121212;
   color: #fffceb;
-  font-size: 13px;
-  transition: background-color 0.2s ease;
-}
-
-.sort-option:hover {
-  background-color: #2a2a2a;
-}
-
-.sort-option.active {
-  background-color: #333;
-}
-
-/* Transition for filters panel */
-.figma-sidebar {
-  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
-}
-
-.figma-sidebar.visible {
-  width: 250px;
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.figma-sidebar.hidden {
-  width: 0;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
-  transform: translateX(-20px);
-  overflow: hidden;
-}
-
-/* Adjust the results container for when filter is hidden */
-.figma-results.full-width {
-  width: 100%;
-}/* Update the figma-results.full-width class to fill more space */
-.figma-results.full-width {
-  width: 100%;
-}
-
-/* Standard grid with 4 columns when sidebar is visible */
-.figma-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  transition: all 0.3s ease;
-}
-
-/* Switch to 5 columns when sidebar is hidden */
-.figma-results.full-width .figma-grid {
-  grid-template-columns: repeat(5, 1fr);
-}
-/* Add to the end of your frontend/src/styles/arcv-figma.css file */
-
-/* Improved filter toggle and grid re-layout */
-.figma-main {
-  display: flex;
-  width: 100%;
-  gap: 40px;
-  position: relative;
-}
-
-/* Enhanced search icons container */
-.search-icons {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.filter-icon, .sort-icon {
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.filter-icon:hover, .sort-icon:hover {
-  opacity: 1;
-}
-
-.filter-icon.active-filter {
-  opacity: 1;
-}
-
-/* Sort dropdown styles */
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 180px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 6px;
-  margin-top: 10px;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.sort-option {
-  padding: 10px 15px;
-  cursor: pointer;
-  color: #fffceb;
-  font-size: 13px;
-  transition: background-color 0.2s ease;
-}
-
-.sort-option:hover {
-  background-color: #2a2a2a;
-}
-
-.sort-option.active {
-  background-color: #333;
-}
-
-/* Smoothly transitioning sidebar */
-.figma-sidebar {
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.figma-sidebar.hidden {
-  width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-.figma-sidebar.visible {
-  width: 190px !important;
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Full-width results with responsive grid */
-.figma-results {
-  flex: 1;
-  transition: all 0.3s ease;
-}
-
-.figma-results.full-width {
-  width: 100%;
-  padding-left: 0;
-}
-
-/* Standard grid with 4 columns when sidebar is visible */
-.figma-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  transition: all 0.3s ease;
-}
-
-/* Switch to 5 columns when sidebar is hidden */
-.figma-results.full-width .figma-grid {
-  grid-template-columns: repeat(5, 1fr);
-  width: 100%;
-  margin-left: 0;
-}
-/* Add this to the end of your arcv-figma.css file */
-
-/* Restore original filter sidebar width */
-.figma-sidebar.visible {
-  width: 250px !important; /* Override the previous 190px width */
-}
-
-.figma-sidebar {
-  width: 250px !important; /* Base width when visible */
-}
-/* Add this to the end of your arcv-figma.css file */
-
-/* Remove arrows/spinners from number inputs */
-.figma-price-input {
-  -webkit-appearance: textfield !important;
-  -moz-appearance: textfield !important;
-  appearance: textfield !important;
-}
-
-/* Hide arrows for Chrome, Safari, Edge, Opera */
-.figma-price-input::-webkit-outer-spin-button,
-.figma-price-input::-webkit-inner-spin-button {
-  -webkit-appearance: none !important;
-  margin: 0 !important;
-}
-/* Ensure sort dropdown appears in front of product cards */
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 180px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 6px;
-  margin-top: 10px;
-  z-index: 1000; /* Increased z-index to appear above products */
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
-}
-
-/* Updated chevron styling to match Figma reference */
-.figma-control-btn {
-  background: none;
-  border: none;
-  color: #fffceb;
-  font-size: 16px;
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Create the chevron up icon */
-.figma-control-btn::after {
-  content: "^";
-  display: block;
+  font-size: 14px;
   font-family: 'Space Mono', monospace;
-  font-weight: bold;
-  transform: scaleX(1.5); /* Make it wider to match reference */
 }
 
-/* Make filter arrow circles match the Figma design */
-.filter-arrow-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.filter-arrow-circle span {
-  font-size: 8px;
-  transform: scaleY(0.7); /* Flatten chevrons slightly to match reference */
-}
-/* Update the sort dropdown z-index to ensure it appears in front of products */
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  width: 180px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 6px;
-  margin-top: 10px;
-  z-index: 1000; /* Increase this value to ensure it's above product grid */
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Optional: add shadow for better visibility */
-}
-/* Position icons inside the search input */
-.figma-search {
-  position: relative;
-}
-
-.figma-search-input {
-  padding-right: 80px; /* Make room for icons */
-}
-
-.search-icons {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.filter-icon, .sort-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.2s ease;
-}
-
-.filter-icon:hover, .sort-icon:hover {
-  opacity: 0.8;
-}
-/* Add this to your frontend/src/styles/arcv-figma.css file */
-
-/* Updated search icons positioning - on the left side */
-.search-icons {
-  position: absolute;
-  left: 15px; /* Change from right to left */
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  z-index: 1001; /* Keep the high z-index */
-}
-
-/* Add padding-left to the search input to make room for icons */
-.figma-search-input {
-  padding-left: 80px !important; /* Add padding to the left instead of right */
-  padding-right: 20px; /* Reset right padding to default */
-}
-/* Higher specificity to override all other search-icons rules */
-.figma-search .search-icons.left-positioned {
-  position: absolute !important;
-  left: 15px !important;
-  right: auto !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  display: flex !important;
-  gap: 10px !important;
-  align-items: center !important;
-  z-index: 1001 !important;
-}
-
-/* Also make sure the input has proper padding */
-.figma-search-input {
-  padding-left: 80px !important;
-  padding-right: 20px !important;
-}
-/* RIGHT POSITIONED SEARCH ICONS - Add this to the end of your CSS file */
-.figma-search {
-  position: relative;
-}
-
-.figma-search-input {
-  padding-right: 80px !important; /* Make room for icons on the right */
-  padding-left: 20px !important; /* Reset left padding */
-}
-
-.search-icons {
-  position: absolute !important;
-  right: 15px !important;
-  left: auto !important; /* Override any left positioning */
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  display: flex !important;
-  gap: 10px !important;
-  align-items: center !important;
-  z-index: 1001 !important;
-}
-
-/* Sort dropdown styles - ensure proper positioning with right alignment */
-.sort-icon {
-  position: relative;
-}
-
-.sort-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  left: auto;
-  width: 180px;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 6px;
-  margin-top: 10px;
-  z-index: 9999;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-.folder-list {
-  max-height: 300px; /* Adjust this value based on how tall you want the list */
-  overflow-y: auto; /* This enables vertical scrolling */
-  padding-right: 5px; /* Adds a bit of space for the scrollbar */
-}
-/* Add scrolling to folder list */
-.folder-list {
-  max-height: 300px; /* Adjust this value based on how tall you want the list */
-  overflow-y: auto; /* This enables vertical scrolling */
-  padding-right: 5px; /* Adds a bit of space for the scrollbar */
-}
-
-/* Style the folder icon images */
-.figma-folder-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-}
-/* Add these styles to your arcv-figma.css file */
-
-/* Grid layout adjustments for 4/5 columns */
-.figma-grid.four-column {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  transition: all 0.3s ease;
-}
-
-.figma-grid.five-column {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 18px;
-  transition: all 0.3s ease;
-}
-
-/* Improved filter toggle button styles */
-.filter-toggle {
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-.filter-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.filter-toggle.active-filter {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-/* Make the filter sidebar transition smoothly */
-.figma-sidebar {
-  transition: width 0.3s ease, opacity 0.3s ease, transform 0.3s ease, padding 0.3s ease;
-  overflow: hidden;
-}
-
-.figma-sidebar.visible {
-  width: 190px;
-  opacity: 1;
-  transform: translateX(0);
-  padding: 10px 8px;
-}
-
-.figma-sidebar.hidden {
-  width: 0;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
-  transform: translateX(-20px);
-  border: none;
-}
-
-/* Smooth transition for the results container */
-.figma-results {
-  transition: width 0.3s ease, flex 0.3s ease;
-}
-
-.figma-results.full-width {
-  width: 100%;
-}
-
-/* Fix for the main layout */
-.figma-main {
-  display: flex;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-/* Chevron icon styling */
-.chevron-icon {
-  width: 10px;
-  height: 10px;
-  transition: transform 0.2s ease;
-}
-
-.chevron-right {
-  transform: rotate(-90deg);
-}
-
-.chevron-down {
-  transform: rotate(0deg);
-}
-/* Updated styling for filter icons without the circle */
-.figma-filter-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-}
-
-.chevron-icon {
-  width: 12px;
-  height: 12px;
-  transition: transform 0.2s ease;
-}
-
-.chevron-right {
-  transform: rotate(-90deg);
-}
-
-.chevron-down {
-  transform: rotate(0deg);
+.simple-search-input:focus {
+  outline: none;
 }

@@ -1,0 +1,632 @@
+/* Extend the simple-folders.css styling for the folder contents page */
+
+/* Folder header with title and tags */
+.simple-folder-header {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.simple-back-button {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #fffceb;
+  cursor: pointer;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.simple-back-button:hover {
+  opacity: 1;
+}
+
+.simple-folder-title-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.simple-folder-main-title {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+}
+
+.simple-folder-tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Grid controls with view toggle and action buttons */
+.simple-grid-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* View toggle button and dropdown */
+.simple-view-toggle {
+  position: relative;
+}
+
+.simple-view-button {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fffceb;
+  padding: 8px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.simple-view-button:hover {
+  background-color: #222;
+}
+
+.simple-view-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 100;
+  width: 150px;
+}
+
+.simple-view-option {
+  padding: 8px 16px;
+  color: #fffceb;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.simple-view-option:hover {
+  background-color: #272727;
+}
+
+.simple-view-option.active {
+  background-color: #333;
+}
+
+/* Action buttons container */
+.simple-action-buttons {
+  display: flex;
+  gap: 15px;
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+.simple-action-btn {
+  background: none;
+  border: none;
+  color: #fffceb;
+  opacity: 0.7;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.simple-action-btn:hover, 
+.simple-action-btn.active {
+  opacity: 1;
+}
+
+/* Grid size slider - keep existing styling */
+.simple-grid-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+/* Products container with white border */
+.simple-products-container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Products grid - similar to folders grid but with product-specific styling */
+.simple-products-grid {
+  display: grid;
+  gap: 16px; /* Reduced gap for better spacing */
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Different column counts based on the slider value - adjusted for better proportions */
+.simple-products-grid.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.simple-products-grid.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.simple-products-grid.grid-cols-5 {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.simple-products-grid.grid-cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
+
+/* Product item styling */
+.simple-product-item-container {
+  position: relative;
+  overflow: visible;
+}
+
+.simple-product-item-container.selected .simple-product-box {
+  border: 2px solid #fffceb;
+}
+
+.simple-product-item {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.simple-product-item:hover {
+  transform: translateY(-4px);
+}
+
+/* Product box with image */
+.simple-product-box {
+  position: relative;
+  background-color: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  padding-top: 100%; /* Square aspect ratio */
+  width: 100%;
+  transition: border 0.2s ease;
+}
+
+.simple-product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Selection indicator */
+.simple-product-selection {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.2s ease;
+}
+
+.simple-product-selection.selected {
+  background-color: #47956f; /* Green checkmark background */
+  border-color: transparent;
+}
+
+/* Product info below image - Reduced font sizes */
+.simple-product-info {
+  padding: 8px 0;
+}
+
+.simple-product-title {
+  font-size: 13px; /* Smaller font size */
+  margin-bottom: 2px;
+  color: #fffceb;
+  font-weight: bold;
+}
+
+.simple-product-subtitle {
+  font-size: 11px; /* Smaller font size */
+  color: #fffceb;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+
+.simple-product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.simple-product-tag {
+  font-size: 10px; /* Smaller font size */
+  color: #fffceb;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.simple-product-tag:hover,
+.simple-product-tag.active {
+  opacity: 1;
+}
+
+/* List view styling - Updated with better spacing */
+.simple-products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Added gap between list items */
+}
+
+.simple-product-list-item {
+  display: flex;
+  background-color: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+  margin-bottom: 6px; /* Added margin for better spacing */
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+}
+
+.simple-product-list-item:hover {
+  transform: translateX(5px);
+}
+
+.simple-product-list-item.selected {
+  border: 1px solid #fffceb;
+}
+
+.simple-product-list-image {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.simple-product-list-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.simple-product-list-info {
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.simple-product-list-title {
+  font-size: 13px; /* Smaller font */
+  font-weight: bold;
+  margin-bottom: 4px;
+  color: #fffceb;
+}
+
+.simple-product-list-details {
+  font-size: 11px; /* Smaller font */
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+/* Interactive board styling */
+.simple-interactive-container {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  min-height: 500px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.simple-interactive-toolbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #1a1a1a;
+  padding: 8px 16px;
+  border-bottom: 1px solid #333;
+  z-index: 1005; /* Higher z-index to stay on top */
+}
+
+.simple-interactive-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.simple-tool-btn {
+  background: none;
+  border: none;
+  color: #fffceb;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.simple-tool-btn:hover {
+  background-color: #333;
+}
+
+.simple-tool-btn.active {
+  background-color: #2a2a2a;
+}
+
+.simple-tool-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #444;
+  margin: 0 8px;
+}
+
+.simple-color-indicator {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+  cursor: pointer;
+}
+
+.simple-interactive-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1005; /* Higher z-index to stay on top */
+}
+
+.simple-active-users {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.simple-user-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid white;
+}
+
+.simple-interactive-board {
+  flex-grow: 1;
+  background-color: #121212;
+  position: relative;
+  overflow: hidden;
+}
+
+.simple-interactive-board.dark-mode {
+  background-color: #121212;
+}
+
+.simple-interactive-board.light-mode {
+  background-color: #FFFCEB;
+}
+
+.simple-board-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+}
+
+.simple-board-item {
+  position: absolute;
+  border-radius: 4px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  z-index: 900; /* Lower z-index than annotations */
+}
+
+.simple-board-item.selected {
+  box-shadow: 0 0 0 2px #47956f, 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 901; /* Higher than normal items, but lower than annotations */
+}
+
+.simple-board-item img {
+  width: 100%;
+  height: calc(100% - 30px);
+  object-fit: cover;
+}
+
+.simple-board-item-label {
+  padding: 6px;
+  font-size: 10px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.simple-products-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 2000; /* Ensure dropdowns are on top */
+  width: 220px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.simple-dropdown-title {
+  padding: 8px 12px;
+  font-size: 12px;
+  border-bottom: 1px solid #333;
+  color: #fffceb;
+}
+
+.simple-dropdown-products {
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.simple-dropdown-product {
+  background-color: #272727;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.simple-dropdown-product:hover {
+  background-color: #333;
+}
+
+.simple-dropdown-product img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+}
+
+.simple-dropdown-product-name {
+  padding: 4px 6px;
+  font-size: 10px;
+  color: #fffceb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.simple-board-navigation {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  padding: 6px;
+  z-index: 1500; /* High z-index for navigation controls */
+}
+
+.simple-nav-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #272727;
+  border: none;
+  color: #fffceb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.simple-nav-btn:hover {
+  background-color: #333;
+}
+
+/* Annotations - Ensure they appear on top of products */
+.simple-annotation-note {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1200 !important; /* Ensure notes are on top */
+}
+
+.simple-annotation-tag {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1200 !important; /* Ensure tags are on top */
+}
+
+.simple-annotation-text {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  z-index: 1200 !important; /* Ensure text is on top */
+}
+
+/* Make annotations editable */
+.simple-annotation-note textarea,
+.simple-annotation-tag input,
+.simple-annotation-text input {
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  resize: none;
+  outline: none;
+}
+
+/* Color wheel styling */
+.color-wheel-container {
+  z-index: 2000 !important; /* Ensure color picker is always on top */
+}
+
+/* Ensure all dropdowns appear above everything */
+.simple-view-dropdown,
+.simple-sort-dropdown {
+  z-index: 2000 !important;
+}
+
+/* Remove gap below the main annotation container in interactive view */
+.simple-annotation-svg {
+  z-index: 1100 !important; /* Higher than products, lower than editable annotations */
+}
+
+/* When an annotation or item is selected, it should be above other elements */
+.simple-annotation-note.selected,
+.simple-annotation-tag.selected,
+.simple-annotation-text.selected {
+  z-index: 1300 !important;
+}
+
+/* Ensure board has proper stacking for edit tools */
+.simple-interactive-board {
+  z-index: 900;
+}

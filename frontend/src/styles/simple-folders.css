@@ -126,12 +126,13 @@
   background-color: #ffffff;
 }
 
-/* Grid size control - replaces the Back to Search button */
+/* Grid size control - Updated layout with grid slider on the left */
 .simple-grid-controls {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 22px; /* Scaled down from 30px */
+  gap: 20px;
 }
 
 .simple-grid-slider {
@@ -182,6 +183,7 @@
   align-items: center;
   gap: 8px; /* Scaled down from 10px */
   font-size: 11px; /* Scaled down from 14px */
+  margin-left: auto; /* Push to the right */
 }
 
 .simple-active-tag {
@@ -199,6 +201,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Current sort indicator - Removed as requested */
+.simple-current-sort {
+  display: none; /* Hide the current sort indicator */
 }
 
 /* Folders grid - dynamic columns based on grid size */
@@ -484,16 +491,6 @@
   font-family: 'Space Mono', monospace;
   position: relative;
 }
-
-/* Mode-specific titles for edit mode only - REMOVED as requested */
-/* .simple-modal.edit-mode:before {
-  content: "Edit Folder";
-  display: block;
-  font-size: 18px;
-  margin-bottom: 30px;
-  color: #f5f5f5;
-  font-family: 'Space Mono', monospace;
-} */
 
 .simple-form-group {
   margin-bottom: 24px; /* Increased spacing between form groups */

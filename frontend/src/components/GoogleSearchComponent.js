@@ -1,6 +1,6 @@
 // frontend/src/components/GoogleSearchComponent.js
 import React, { useState } from 'react';
-import { performGoogleSearch, extractAndSaveSneakerData } from '../services/googleSearchService';
+import { searchSneakers } from '../services/mockDataService';
 import '../styles/figma-design.css';
 
 const GoogleSearchComponent = ({ onSearchComplete }) => {
@@ -19,16 +19,15 @@ const GoogleSearchComponent = ({ onSearchComplete }) => {
     try {
       setIsSearching(true);
       
-      // Use the Google search service
-      const searchResults = await performGoogleSearch(searchTerm);
-      
-      // Process and save the search results
-      const processedSneakers = await extractAndSaveSneakerData(searchResults);
+      // Use the mock data service instead of Google search
+      const searchResults = await searchSneakers(searchTerm);
       
       // Notify parent component of search results
       if (onSearchComplete) {
-        onSearchComplete(processedSneakers);
+        onSearchComplete(searchResults.results || []);
       }
+      
+      console.log(`Found ${searchResults.results?.length || 0} results from mock data`);
       
     } catch (error) {
       console.error('Error performing search:', error);

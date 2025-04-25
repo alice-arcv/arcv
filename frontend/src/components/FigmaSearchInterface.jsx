@@ -1,9 +1,9 @@
 // frontend/src/components/FigmaSearchInterface.jsx
 import React, { useState, useEffect } from 'react';
 // Import the search integration service
-import { searchSneakers, formatSneakerData } from '../services/searchIntegration';
+import { searchSneakers } from '../services/searchIntegration';
+// Import only the consolidated CSS file
 import '../styles/arcv-figma.css';
-import '../styles/filter-fix.css'; // Import the new filter styles if you have this file
 // Import the logo with the correct filename
 import logoImage from '../images/arcv-logo.png';
 // Import the chevron icon
@@ -12,15 +12,17 @@ import chevronIcon from '../images/chevron-icon.png';
 import ProductDetail from './ProductDetail';
 // Import the SaveToFolderPopup component
 import SaveToFolderPopup from './SaveToFolderPopup';
+// Import the ProfileDropdown component
+import ProfileDropdown from './ProfileDropdown';
 
 const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onSaveProduct, onGoToFolders, onGoToImageSearch }) => {
   // State for search and results
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
+  const [sortedDisplayResults, setSortedDisplayResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchSource, setSearchSource] = useState('');
-  const [isFilterVisible, setIsFilterVisible] = useState(true);
-  const [expandedFilter, setExpandedFilter] = useState('material'); // Default to material being expanded
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [expandedFilter, setExpandedFilter] = useState(null); // Default to material being expanded
   const [filters, setFilters] = useState({
     gender: [],
     age: [],
@@ -65,29 +67,6 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
   const handleSortChange = (option) => {
     setSortOption(option);
     setSortMenuOpen(false);
-    
-    // Apply sorting to results
-    let sortedResults = [...results];
-    
-    switch(option) {
-      case 'newest':
-        sortedResults.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
-        break;
-      case 'oldest':
-        sortedResults.sort((a, b) => (a.releaseDate || '').localeCompare(b.releaseDate || ''));
-        break;
-      case 'price-asc':
-        sortedResults.sort((a, b) => (parseFloat(a.retailPrice) || 0) - (parseFloat(b.retailPrice) || 0));
-        break;
-      case 'price-desc':
-        sortedResults.sort((a, b) => (parseFloat(b.retailPrice) || 0) - (parseFloat(a.retailPrice) || 0));
-        break;
-      default:
-        // Default sorting (newest)
-        sortedResults.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
-    }
-    
-    setResults(sortedResults);
   };
   
   // Handle search when Enter key is pressed
@@ -128,12 +107,8 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
       console.log('Results source:', searchResults.source);
       console.log('Number of results:', searchResults.results?.length || 0);
       
-      // Set the results and remember the source for debugging
+      // Set the results
       setResults(searchResults.results || []);
-      setSearchSource(searchResults.source || 'unknown');
-      
-      // Apply current sort option to new results
-      handleSortChange(sortOption);
       
       // Log the first few results for debugging
       if (searchResults.results && searchResults.results.length > 0) {
@@ -147,7 +122,6 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
     } catch (error) {
       console.error('Search error:', error);
       setResults([]);
-      setSearchSource('error');
     } finally {
       setLoading(false);
       console.log('=== SEARCH COMPLETED ===');
@@ -173,11 +147,6 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
         [filterType]: currentValues
       };
     });
-  };
-
-  // Handle material filter changes (same as other filters now for consistency)
-  const handleMaterialChange = (material) => {
-    handleFilterChange('material', material);
   };
   
   // Handle price range changes
@@ -221,60 +190,39 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
     }
   }, [filters]);
 
-  // Mock data to match Figma reference
-  const mockData = [
-    {
-      id: 'aj1-1',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-2',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-3',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-4',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-5',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-6',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-7',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
-    },
-    {
-      id: 'aj1-8',
-      name: 'AIR JORDAN 1',
-      subtitle: '[Retro High OG/Palomino]',
-      imageUrl: 'https://via.placeholder.com/300x300/eeeeee/333333?text=Jordan+1'
+  // Apply sorting whenever results or sortOption changes
+  useEffect(() => {
+    let sorted = [...results];
+    switch(sortOption) {
+      case 'newest':
+        sorted.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
+        break;
+      case 'oldest':
+        sorted.sort((a, b) => (a.releaseDate || '').localeCompare(b.releaseDate || ''));
+        break;
+      case 'price-asc':
+        sorted.sort((a, b) => (parseFloat(a.retailPrice) || 0) - (parseFloat(b.retailPrice) || 0));
+        break;
+      case 'price-desc':
+        sorted.sort((a, b) => (parseFloat(b.retailPrice) || 0) - (parseFloat(a.retailPrice) || 0));
+        break;
+      default:
+        sorted.sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''));
     }
-  ];
-
-  // Use mockData if no search results
-  const displayResults = results.length > 0 ? results : mockData;
+    
+    // Filter out items with missing or placeholder images
+    const placeholderUrl = 'https://via.placeholder.com/300x300/eeeeee/333333?text=No+Image';
+    const filteredSorted = sorted.filter(sneaker => {
+      // Remove items where imageUrl is falsy, points to the placeholder, or contains "X" pattern URLs
+      return sneaker.imageUrl && 
+             sneaker.imageUrl !== placeholderUrl && 
+             !sneaker.imageUrl.includes('/X/') &&
+             !sneaker.imageUrl.includes('/x/');
+    });
+    
+    setSortedDisplayResults(filteredSorted);
+    console.log(`Sorting applied: ${sortOption}, Results count: ${filteredSorted.length} (filtered from ${sorted.length})`);
+  }, [results, sortOption]); // Run when results or sortOption changes
 
   // Render the component - conditionally show product detail or search interface
   return (
@@ -348,10 +296,10 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
               </div>
             </div>
             
-            {/* Control buttons on the right */}
+            {/* Control buttons on the right - REMOVED THE CONTROL BUTTON */}
             <div className="figma-controls">
-              <button className="figma-control-btn">^</button>
-              <div className="figma-user-icon"></div>
+              {/* ProfileDropdown component with onGoToFolders prop */}
+              <ProfileDropdown onGoToFolders={onGoToFolders} />
             </div>
           </div>
           
@@ -770,61 +718,35 @@ const FigmaSearchInterface = ({ savedFolders, savedProducts, onCreateFolder, onS
                   </div>
                 ) : (
                   <div className={`figma-grid ${!isFilterVisible ? 'five-column' : 'four-column'}`}>
-                    {displayResults.map((sneaker) => (
-                      <div 
-                        key={sneaker.id} 
+                    {sortedDisplayResults.map((sneaker) => (
+                      <div
+                        key={sneaker.id}
                         className="figma-product-card"
                         onClick={() => handleProductSelect(sneaker)}
                         onMouseEnter={() => handleProductHover(sneaker.id)}
-                        onMouseLeave={() => setHoveredProduct(null)}
+                        onMouseLeave={() => handleProductHover(null)}
                       >
                         <div className="figma-product-image">
-                          <img 
-                            src={sneaker.imageUrl} 
+                          <img
+                            src={sneaker.imageUrl}
                             alt={sneaker.name}
                             onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/300x300/eeeeee/333333?text=Product';
+                              console.error('Image failed to load:', sneaker.imageUrl);
+                              e.target.onerror = null;
+                              e.target.src = 'https://via.placeholder.com/300x300/eeeeee/333333?text=No+Image';
                             }}
                           />
-                          
-                          {/* Show action buttons on hover */}
                           {hoveredProduct === sneaker.id && (
                             <div className="figma-product-actions">
                               <button 
                                 className="figma-save-btn"
-                                onClick={(e) => {
-                                  e.stopPropagation(); // Prevent triggering the card click
-                                  setSelectedForSave(sneaker.id);
+                                onClick={(e) => { 
+                                  e.stopPropagation(); 
+                                  setSelectedForSave(sneaker.id); 
                                 }}
                               >
                                 +
                               </button>
-                            </div>
-                          )}
-                          
-                          {/* Saved indicator */}
-                          {Object.entries(savedProducts).some(([folderId, products]) => 
-                            products.includes(sneaker.id)
-                          ) && (
-                            <div className="figma-product-saved-indicator"></div>
-                          )}
-                          
-                          {/* Tiny indicator of source that doesn't change the UI look */}
-                          {sneaker.source && (
-                            <div style={{
-                              position: 'absolute',
-                              bottom: '2px',
-                              right: '2px',
-                              fontSize: '8px',
-                              color: 'rgba(255,255,255,0.5)',
-                              background: 'rgba(0,0,0,0.2)',
-                              padding: '1px 3px',
-                              borderRadius: '2px'
-                            }}>
-                              {sneaker.source === 'sneakersapi' ? 's' : 
-                               sneaker.source === 'firebase' ? 'f' : 
-                               sneaker.source === 'google' ? 'g' : 
-                               sneaker.source.slice(0,1)}
                             </div>
                           )}
                         </div>

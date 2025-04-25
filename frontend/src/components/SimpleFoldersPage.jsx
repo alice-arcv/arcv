@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-// Only import our new CSS file
+// Import our CSS files
 import '../styles/simple-folders.css';
+import '../styles/folder-contents.css';
 
 // Import the logo image
 import logoImage from '../images/arcv-logo.png';
 
-const SimpleFoldersPage = ({ onBack }) => {
+// Import the FolderContentsPage component
+import FolderContentsPage from './FolderContentsPage';
+// Import the ProfileDropdown component
+import ProfileDropdown from './ProfileDropdown';
+
+const SimpleFoldersPage = ({ onBack, onGoToFolders }) => {
   const [folders, setFolders] = useState([]);
   const [filteredFolders, setFilteredFolders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,14 +21,20 @@ const SimpleFoldersPage = ({ onBack }) => {
   const [folderToDelete, setFolderToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
+  const [sortMenuPosition, setSortMenuPosition] = useState({ top: 0, left: 0 });
   const [sortOption, setSortOption] = useState('newest');
   const [activeTag, setActiveTag] = useState(null);
   const [gridSize, setGridSize] = useState(4); // Default is 4 columns
+  
+  // State for folder content view
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [viewingFolderContents, setViewingFolderContents] = useState(false);
   
   // Refs for positioning and hover handling
   const sortIconRef = useRef(null);
   const menuRefs = useRef({});
   const dropdownRef = useRef(null);
+  const sortDropdownRef = useRef(null);
   
   // New folder modal state
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
@@ -130,11 +142,24 @@ const SimpleFoldersPage = ({ onBack }) => {
     }
   }, [searchTerm, folders, activeTag]);
 
+  // Apply current sort option whenever the filtered folders change
+  useEffect(() => {
+    if (filteredFolders.length > 0) {
+      handleSortChange(sortOption, false); // Don't close menu when sorting is triggered by filter changes
+    }
+  }, [activeTag, searchTerm]);
+
   // Close sort menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (sortMenuOpen && sortIconRef.current && !sortIconRef.current.contains(event.target)) {
+      if (sortMenuOpen && sortIconRef.current && !sortIconRef.current.contains(event.target) &&
+          sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
         setSortMenuOpen(false);
+      }
+      
+      // Close any active folder menu when clicking outside, but allow clicking the menu buttons
+      if (activeMenu && !event.target.closest('.simple-menu-dots') && !event.target.closest('.simple-dropdown button')) {
+        setActiveMenu(null);
       }
     }
     
@@ -142,7 +167,7 @@ const SimpleFoldersPage = ({ onBack }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sortMenuOpen]);
+  }, [sortMenuOpen, activeMenu]);
 
   // Handle mouse enter for menu with position calculation
   const handleMenuMouseEnter = (folderId, e) => {
@@ -176,9 +201,20 @@ const SimpleFoldersPage = ({ onBack }) => {
     setActiveMenu(null);
   };
 
+  // Handle folder click - now opens the folder contents view
   const handleFolderClick = (folderId) => {
-    console.log(`Viewing folder ${folderId}`);
-    // Navigate to folder detail view
+    // Find the selected folder
+    const folder = folders.find(f => f.id === folderId);
+    if (folder) {
+      setSelectedFolder(folder);
+      setViewingFolderContents(true);
+    }
+  };
+
+  // Handle folder contents view back button click
+  const handleFolderContentsBack = () => {
+    setViewingFolderContents(false);
+    setSelectedFolder(null);
   };
 
   // Edit folder click
@@ -288,6 +324,17 @@ const SimpleFoldersPage = ({ onBack }) => {
   
   // Handle sort icon click with position calculation
   const handleSortIconClick = (e) => {
+    // Get the position of the sort icon
+    const rect = sortIconRef.current.getBoundingClientRect();
+    
+    // Calculate position for the dropdown menu
+    setSortMenuPosition({
+      top: rect.bottom + 5, // Position below the icon with a small gap
+      left: rect.left,
+      right: window.innerWidth - rect.right
+    });
+    
+    // Toggle sort menu
     setSortMenuOpen(!sortMenuOpen);
   };
   
@@ -364,10 +411,67 @@ const SimpleFoldersPage = ({ onBack }) => {
     // Add the new folder to state
     const updatedFolders = [...folders, newFolder];
     setFolders(updatedFolders);
-    setFilteredFolders(updatedFolders);
+    
+    // Apply the current filter and sort to include the new folder
+    const filtered = applyFilter(updatedFolders);
+    setFilteredFolders(applySorting(filtered, sortOption));
     
     // Close the modal
     setShowNewFolderModal(false);
+  };
+  
+  // Apply the current filter to a set of folders
+  const applyFilter = (foldersList) => {
+    if (searchTerm.trim() === '' && !activeTag) {
+      return foldersList;
+    }
+    
+    let filtered = foldersList;
+    
+    // Apply search term filter
+    if (searchTerm.trim() !== '') {
+      const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(folder => {
+        const nameMatch = folder.name.toLowerCase().includes(normalizedSearchTerm);
+        const tagMatch = folder.tags.some(tag => 
+          tag.toLowerCase().includes(normalizedSearchTerm)
+        );
+        return nameMatch || tagMatch;
+      });
+    }
+    
+    // Apply tag filter
+    if (activeTag) {
+      filtered = filtered.filter(folder => 
+        folder.tags.includes(activeTag)
+      );
+    }
+    
+    return filtered;
+  };
+  
+  // Apply a specific sort option to a list of folders
+  const applySorting = (foldersList, option) => {
+    let sorted = [...foldersList];
+    
+    switch(option) {
+      case 'newest':
+        sorted.sort((a, b) => b.id - a.id);
+        break;
+      case 'oldest':
+        sorted.sort((a, b) => a.id - b.id);
+        break;
+      case 'name-asc':
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        sorted.sort((a, b) => b.id - a.id);
+    }
+    
+    return sorted;
   };
   
   // Save the edited folder
@@ -387,7 +491,10 @@ const SimpleFoldersPage = ({ onBack }) => {
     
     // Update state
     setFolders(updatedFolders);
-    setFilteredFolders(updatedFolders);
+    
+    // Apply the current filter and sort to include the edited folder
+    const filtered = applyFilter(updatedFolders);
+    setFilteredFolders(applySorting(filtered, sortOption));
     
     // Close the edit modal
     setShowEditFolderModal(false);
@@ -400,34 +507,17 @@ const SimpleFoldersPage = ({ onBack }) => {
   };
 
   // Handle sort selection - Updated to use name-based sorting
-  const handleSortChange = (option) => {
+  const handleSortChange = (option, closeMenu = true) => {
+    // Set the new sort option
     setSortOption(option);
-    setSortMenuOpen(false);
     
-    // Apply sorting to folders
-    let sortedFolders = [...filteredFolders];
-    
-    switch(option) {
-      case 'newest':
-        sortedFolders.sort((a, b) => b.id - a.id);
-        break;
-      case 'oldest':
-        sortedFolders.sort((a, b) => a.id - b.id);
-        break;
-      case 'name-asc':
-        // Sort by name: A to Z
-        sortedFolders.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'name-desc':
-        // Sort by name: Z to A
-        sortedFolders.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      default:
-        // Default sorting (newest)
-        sortedFolders.sort((a, b) => b.id - a.id);
+    // Close the menu if requested (e.g. when user clicks a sort option)
+    if (closeMenu) {
+      setSortMenuOpen(false);
     }
     
-    setFilteredFolders(sortedFolders);
+    // Apply sorting to filtered folders
+    setFilteredFolders(applySorting(filteredFolders, option));
   };
   
   // Handle grid size slider change
@@ -435,6 +525,19 @@ const SimpleFoldersPage = ({ onBack }) => {
     setGridSize(parseInt(e.target.value, 10));
   };
 
+  // If viewing folder contents, render the FolderContentsPage
+  if (viewingFolderContents && selectedFolder) {
+    return (
+      <FolderContentsPage 
+        folder={selectedFolder} 
+        onBack={handleFolderContentsBack}
+        onSaveProduct={() => console.log('Save product functionality would be implemented here')}
+        onGoToFolders={onGoToFolders}
+      />
+    );
+  }
+
+  // Otherwise, render the folders page
   return (
     <div className="simple-folders-page">
       {/* Header with logo and search */}
@@ -464,62 +567,57 @@ const SimpleFoldersPage = ({ onBack }) => {
               <path d="M7 14l5 5 5-5M7 10l5-5 5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          
-          {/* Sort dropdown menu as a separate fixed element - Updated with new names */}
-          {sortMenuOpen && (
-            <div className="simple-sort-dropdown">
-              <div 
-                className={`simple-sort-option ${sortOption === 'newest' ? 'active' : ''}`} 
-                onClick={() => handleSortChange('newest')}
-              >
-                Newest to Oldest
-              </div>
-              <div 
-                className={`simple-sort-option ${sortOption === 'oldest' ? 'active' : ''}`} 
-                onClick={() => handleSortChange('oldest')}
-              >
-                Oldest to Newest
-              </div>
-              <div 
-                className={`simple-sort-option ${sortOption === 'name-asc' ? 'active' : ''}`} 
-                onClick={() => handleSortChange('name-asc')}
-              >
-                Name: A to Z
-              </div>
-              <div 
-                className={`simple-sort-option ${sortOption === 'name-desc' ? 'active' : ''}`} 
-                onClick={() => handleSortChange('name-desc')}
-              >
-                Name: Z to A
-              </div>
-            </div>
-          )}
         </div>
         
         {/* Control buttons */}
         <div className="simple-controls">
-          <button className="simple-control-btn">^</button>
-          <button className="simple-control-btn">=</button>
-          <div className="simple-user-icon"></div>
+          {/* ProfileDropdown component with onGoToFolders prop */}
+          <ProfileDropdown onGoToFolders={onGoToFolders} />
         </div>
       </div>
       
-      {/* Grid size control - replaces Back to Search button */}
-      <div className="simple-grid-controls">
-        {/* Show active tag filter if any */}
-        {activeTag && (
-          <div className="simple-tag-filter">
-            Filtering by: <span className="simple-active-tag">#{activeTag}</span>
-            <button 
-              className="simple-clear-filter" 
-              onClick={() => setActiveTag(null)}
-            >
-              ×
-            </button>
+      {/* Sort dropdown menu positioned absolutely */}
+      {sortMenuOpen && (
+        <div 
+          className="simple-sort-dropdown" 
+          style={{ 
+            position: 'fixed',
+            top: `${sortMenuPosition.top}px`,
+            left: `${sortMenuPosition.left}px`,
+            zIndex: 1000
+          }}
+          ref={sortDropdownRef}
+        >
+          <div 
+            className={`simple-sort-option ${sortOption === 'newest' ? 'active' : ''}`} 
+            onClick={() => handleSortChange('newest')}
+          >
+            Newest to Oldest
           </div>
-        )}
-        
-        {/* Grid size slider */}
+          <div 
+            className={`simple-sort-option ${sortOption === 'oldest' ? 'active' : ''}`} 
+            onClick={() => handleSortChange('oldest')}
+          >
+            Oldest to Newest
+          </div>
+          <div 
+            className={`simple-sort-option ${sortOption === 'name-asc' ? 'active' : ''}`} 
+            onClick={() => handleSortChange('name-asc')}
+          >
+            Name: A to Z
+          </div>
+          <div 
+            className={`simple-sort-option ${sortOption === 'name-desc' ? 'active' : ''}`} 
+            onClick={() => handleSortChange('name-desc')}
+          >
+            Name: Z to A
+          </div>
+        </div>
+      )}
+      
+      {/* Grid size control - Modified layout */}
+      <div className="simple-grid-controls">
+        {/* Grid size slider - Moved to left side */}
         <div className="simple-grid-slider">
           <div className="simple-slider-icon small">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -551,6 +649,19 @@ const SimpleFoldersPage = ({ onBack }) => {
             </svg>
           </div>
         </div>
+        
+        {/* Show active tag filter if any */}
+        {activeTag && (
+          <div className="simple-tag-filter">
+            Filtering by: <span className="simple-active-tag">#{activeTag}</span>
+            <button 
+              className="simple-clear-filter" 
+              onClick={() => setActiveTag(null)}
+            >
+              ×
+            </button>
+          </div>
+        )}
       </div>
       
       {/* Folders grid - dynamic columns based on gridSize */}
@@ -790,7 +901,7 @@ const SimpleFoldersPage = ({ onBack }) => {
         </div>
       )}
       
-      {/* Edit Folder Modal - Updated to remove image preview and only show the Add Image part */}
+      {/* Edit Folder Modal - Updated to show image previews just like the New Folder modal */}
       {showEditFolderModal && (
         <div className="simple-overlay" onClick={() => setShowEditFolderModal(false)}>
           <div className="simple-modal edit-mode" onClick={(e) => e.stopPropagation()}>
@@ -837,11 +948,17 @@ const SimpleFoldersPage = ({ onBack }) => {
                 </div>
               </div>
               
-              {/* Updated image section - Only show Add Image option */}
+              {/* Updated image section - Now shows image previews just like the New Folder modal */}
               <div className="simple-form-group">
                 <label>Images</label>
                 <div className="simple-images-preview">
-                  {/* Remove preview of existing images, only show Add Image button */}
+                  {/* Show previews of existing images, just like in New Folder modal */}
+                  {newFolderData.images.map((img, index) => (
+                    <div key={index} className="simple-preview">
+                      <img src={img} alt={`Preview ${index}`} />
+                    </div>
+                  ))}
+                  
                   <div className="simple-add-image" onClick={() => handleAddImage(editFileInputRef)}>
                     <span>+</span>
                     <p>Add Image</p>
